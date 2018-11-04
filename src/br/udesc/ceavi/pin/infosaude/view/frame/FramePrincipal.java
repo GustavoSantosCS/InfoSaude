@@ -1,11 +1,17 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
-import br.udesc.ceavi.pin.infosaude.view.component.MenuJPane;
+import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.beans.PropertyVetoException;
 import javax.swing.BorderFactory;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicBorders;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
  *
@@ -13,7 +19,7 @@ import javax.swing.plaf.basic.BasicBorders;
  */
 public class FramePrincipal extends javax.swing.JFrame {
 
-    private MenuJPane menu;
+    private MenuJPaneUniversao menu;
 
     /**
      * Creates new form NewJFrame
@@ -24,21 +30,32 @@ public class FramePrincipal extends javax.swing.JFrame {
     }
 
     public void initComponentsExtenal() {
-
         setSize(jpTopo, new Dimension(this.getSize().width - 286, 130));
         setSize(jpColuna, new Dimension(286, this.getSize().height));
-        this.setMinimumSize(new Dimension(848, this.getSize().height));
+        this.setMinimumSize(new Dimension(993, 647));
         setSize(tfBusca, new Dimension(52, 32));
         setSize(lbTitulo, new Dimension(280, 30));
         setSize(lbBusca, new Dimension(26, 26));
-        setSize(jpAreaAcao, new Dimension(742, 647));
-
-        menu = new MenuJPane(this.jpColuna.getSize().width);
+        menu = new MenuJPaneUniversao(this.jpColuna.getSize().width);
         jpMenu.add(menu);
-        menu.setVisible(true);
-        jpMenu.revalidate();
-        jpMenu.repaint();
+        menu.menuSemUsuario();
+        addPanel(new InternalFrameLogin());
+    }
 
+    public void addPanel(JInternalFrame frame) {
+        jDesktopPane1.removeAll();
+        frame.setMinimumSize(this.jDesktopPane1.getSize());
+        ((BasicInternalFrameUI) frame.getUI()).setNorthPane(null); //retirar o painel superior
+        frame.setBorder(null);
+        frame.setVisible(true);
+        jDesktopPane1.add(frame, BorderLayout.BEFORE_FIRST_LINE);
+        try {
+            frame.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            JOptionPane.showMessageDialog(null, "Erro Não Aguardado");
+            this.dispose();
+        }
+        lbTitulo.setText("" + frame.getTitle());
     }
 
     public void setSize(Component c, Dimension size) {
@@ -60,8 +77,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         lbTitulo = new javax.swing.JLabel();
         tfBusca = new javax.swing.JTextField();
         lbBusca = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jpAreaAcao = new javax.swing.JPanel();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("InfoSaude - Login");
@@ -96,6 +112,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         });
 
         jpMenu.setBackground(new java.awt.Color(195, 195, 195));
+        jpMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         java.awt.GridBagLayout jpMenuLayout = new java.awt.GridBagLayout();
         jpMenuLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         jpMenuLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -119,7 +136,7 @@ public class FramePrincipal extends javax.swing.JFrame {
                 .addGap(50, 50, 50)
                 .addComponent(lbTituloMenu)
                 .addGap(60, 60, 60)
-                .addComponent(jpMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jpMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(btnSair)
                 .addGap(50, 50, 50))
@@ -188,36 +205,31 @@ public class FramePrincipal extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jpTopo, gridBagConstraints);
 
-        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jpAreaAcao.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jpAreaAcaoLayout = new javax.swing.GroupLayout(jpAreaAcao);
-        jpAreaAcao.setLayout(jpAreaAcaoLayout);
-        jpAreaAcaoLayout.setHorizontalGroup(
-            jpAreaAcaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 865, Short.MAX_VALUE)
+        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
+        jDesktopPane1.setLayout(jDesktopPane1Layout);
+        jDesktopPane1Layout.setHorizontalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        jpAreaAcaoLayout.setVerticalGroup(
-            jpAreaAcaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 717, Short.MAX_VALUE)
+        jDesktopPane1Layout.setVerticalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-
-        jScrollPane1.setViewportView(jpAreaAcao);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        getContentPane().add(jScrollPane1, gridBagConstraints);
+        getContentPane().add(jDesktopPane1, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(1062, 836));
+        setSize(new java.awt.Dimension(818, 647));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        System.out.println("Tamanho da Frame: " + this.getSize());
+        System.out.println("Tamanho da panel: " + this.jDesktopPane1.getSize());
+        System.out.println("Tamanho da internal frame: " + this.jDesktopPane1.getAllFrames()[0].getSize());
         this.dispose();
     }//GEN-LAST:event_btnSairActionPerformed
 
@@ -253,8 +265,7 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSair;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel jpAreaAcao;
+    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JPanel jpColuna;
     private javax.swing.JPanel jpMenu;
     private javax.swing.JPanel jpTopo;
