@@ -45,11 +45,6 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
         <Container class="javax.swing.JPanel" name="jpVacina">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="33" green="33" red="ff" type="rgb"/>
-            </Property>
-          </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
         </Container>

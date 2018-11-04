@@ -54,4 +54,9 @@ public class PublicoAlvo {
         this.sexo = sexo;
     }
 
+    @Override
+    public String toString() {
+        return "Idade Maxima= " + maxIdade + " Idade Minima= " + minIdade + " Sexo=" + sexo;
+    }
+
 }

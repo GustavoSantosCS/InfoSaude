@@ -1,5 +1,6 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
+import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
 import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
@@ -10,103 +11,120 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Label;
+import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-public class InternalFrameVacina extends javax.swing.JInternalFrame {
+public class InternalFrameCampanha extends javax.swing.JInternalFrame {
 
-    public InternalFrameVacina() {
+    Calendar calendar = Calendar.getInstance();
+
+    public InternalFrameCampanha() {
+        System.out.println(calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.MONTH));
+        System.out.println(new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).toString());
         initComponents();
-        this.setTitle("Tela de Vacinas");
-        for (int i = 0; i < 20; i++) {
-            addVacina(new Vacina(new Date(2000, 12, 30), 1, "Vacina " + i, new Profissional("Marta Jovana Doarte Suaza"), new PublicoAlvo(9, 7, Sexo.F)));
+        List<PublicoAlvo> lista = new ArrayList<>();
+        lista.add(new PublicoAlvo(10, 6, Sexo.M));
+        lista.add(new PublicoAlvo(10, 6, Sexo.F));
+        lista.add(new PublicoAlvo(20, 4, Sexo.M));
+        lista.add(new PublicoAlvo(20, 4, Sexo.F));
+        lista.add(new PublicoAlvo(100, 60, Sexo.M));
+        lista.add(new PublicoAlvo(100, 60, Sexo.F));
+        this.setTitle("Tela de Campanha");
+        for (int i = 0; i < 10; i++) {
+            addCampanha(new Campanha("Slogam      " + (i + 1), new Vacina(new Date(2008, 1, 16), 1, "Vacina " + (i + 1), new Profissional(), lista),
+                    new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, calendar.get(Calendar.DAY_OF_MONTH)),
+                    new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))));
         }
     }
 
-    public void addVacina(Vacina vacina) {
+    public void addCampanha(Campanha campanha) {
         JPanel panel = new JPanel();
         GridBagConstraints cons = new GridBagConstraints();
-        panel.setSize(new Dimension(200, 200));
+        panel.setSize(new Dimension(300, 250));
+        panel.setMaximumSize(new Dimension(500, 250));
         panel.setLayout(new GridBagLayout());
         panel.setBorder(new LineBorder(Color.BLUE, 1));
 
         cons.gridx = 0;
         cons.gridy = 0;
         cons.anchor = GridBagConstraints.CENTER;
-        cons.gridwidth = 2;
-        panel.add(new Label("Vacina da " + vacina.getVacina()), cons);
+        cons.gridwidth = 4;
+        panel.add(new Label("Campanha de Vacina da " + campanha.getVacina().getVacina()), cons);
 
         cons = new GridBagConstraints();
         cons.gridx = 0;
         cons.gridy = 1;
         cons.anchor = GridBagConstraints.WEST;
-        cons.gridwidth = 1;
-        panel.add(new Label("Doença:"), cons);
+        cons.gridwidth = 4;
+        panel.add(new Label("Slogam: " + campanha.getSlogan()), cons);
 
         cons = new GridBagConstraints();
         cons.gridx = 0;
         cons.gridy = 2;
         cons.anchor = GridBagConstraints.WEST;
-        cons.gridwidth = 1;
-        panel.add(new Label(" " + vacina.getVacina()), cons);
+        cons.gridwidth = 3;
+        panel.add(new Label("Vacina: " + campanha.getVacina().getVacina()), cons);
 
         cons = new GridBagConstraints();
-        cons.gridx = 0;
-        cons.gridy = 3;
-        cons.anchor = GridBagConstraints.WEST;
+        cons.gridx = 5;
+        cons.gridy = 2;
+        cons.anchor = GridBagConstraints.EAST;
         cons.gridwidth = 1;
-        panel.add(new Label("Profissional Que Aplicou:"), cons);
+        JLabel icon = new JLabel();
+
+        if (calendar.getTime().getTime() < campanha.getDataInicio().getTime()) {
+            icon.setIcon(new ImageIcon(getClass().getResource("/br/udesc/ceavi/pin/infosaude/imag/Butao_EmAberto.png")));
+        } else {
+            icon.setIcon(new ImageIcon(getClass().getResource("/br/udesc/ceavi/pin/infosaude/imag/Butao_Finalizado.png")));
+        }
+        panel.add(icon, cons);
 
         cons = new GridBagConstraints();
         cons.gridx = 0;
         cons.gridy = 4;
         cons.anchor = GridBagConstraints.WEST;
-        cons.gridwidth = 2;
-        panel.add(new Label(" " + vacina.getProfissional().getNome()), cons);
+        cons.gridwidth = 1;
+        panel.add(new Label("Periodo: "), cons);
 
         cons = new GridBagConstraints();
         cons.gridx = 0;
         cons.gridy = 5;
         cons.anchor = GridBagConstraints.WEST;
-        cons.gridwidth = 2;
-        panel.add(new Label("Data: " + vacina.getDataAplicacao().getDay()
-                + "/" + vacina.getDataAplicacao().getMonth()
-                + "/" + vacina.getDataAplicacao().getYear()), cons);
+        cons.gridwidth = 1;
+        cons.gridheight = 1;
+        panel.add(new Label(campanha.getDataInicio().getDate() + "/"
+                + (campanha.getDataInicio().getMonth() + 1) + "/"
+                + campanha.getDataInicio().getYear()), cons);
 
         cons = new GridBagConstraints();
-        cons.gridx = 0;
-        cons.gridy = 6;
-        cons.anchor = GridBagConstraints.WEST;
-        cons.gridwidth = 2;
-        panel.add(new Label("Observações:"), cons);
-
-        cons = new GridBagConstraints();
-        cons.gridx = 0;
-        cons.gridy = 7;
-        cons.anchor = GridBagConstraints.WEST;
-        cons.gridwidth = 2;
-        cons.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(new JTextField("Observações Aquiv"), cons);
-
-        cons = new GridBagConstraints();
-        cons.gridx = 1;
-        cons.gridy = 1;
+        cons.gridx = 2;
+        cons.gridy = 5;
         cons.anchor = GridBagConstraints.WEST;
         cons.gridwidth = 1;
-        panel.add(new Label("Dose:"), cons);
+        cons.gridheight = 1;
+        panel.add(new Label(" Até "), cons);
 
         cons = new GridBagConstraints();
-        cons.gridx = 1;
-        cons.gridy = 2;
+        cons.gridx = 3;
+        cons.gridy = 5;
         cons.anchor = GridBagConstraints.WEST;
         cons.gridwidth = 1;
-        panel.add(new Label(" " + vacina.getDose()), cons);
+        cons.gridheight = 1;
+        panel.add(new Label(campanha.getDataFim().getDate() + "/"
+                + (campanha.getDataFim().getMonth() + 1) + "/"
+                + campanha.getDataFim().getYear()), cons);
 
         cons = new GridBagConstraints();
-        cons.gridx = jpVacina.getComponentCount() % 3;
-        cons.gridy = jpVacina.getComponentCount() / 3;
+        cons.gridx = jpVacina.getComponentCount() % 2;
+        cons.gridy = jpVacina.getComponentCount() / 2;
         cons.insets = new Insets(5, 5, 5, 5);
         cons.weightx = 1.0;
         cons.fill = GridBagConstraints.BOTH;
