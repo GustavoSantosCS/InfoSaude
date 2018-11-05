@@ -39,7 +39,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width);
         jpMenu.add(menu);
         menu.menuSemUsuario();
-        addPanel(new InternalFrameCampanha());
+        addPanel(new InternalFrameInstituicao());
     }
 
     public void addPanel(JInternalFrame frame) {
