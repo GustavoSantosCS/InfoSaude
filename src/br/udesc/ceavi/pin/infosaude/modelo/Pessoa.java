@@ -15,6 +15,7 @@ import java.util.Date;
  */
 public class Pessoa {
 
+    private long id;
     private String cpf;
     private Date dataNascimento;
     private String login;
@@ -44,6 +45,14 @@ public class Pessoa {
         this.endereco = endereco;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+    
     public String getCpf() {
         return cpf;
     }

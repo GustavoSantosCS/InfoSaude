@@ -1,5 +1,6 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
+import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
 import java.awt.BorderLayout;
@@ -7,6 +8,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -20,13 +23,18 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 public class FramePrincipal extends javax.swing.JFrame {
 
     private MenuJPaneUniversao menu;
+    
+//    Connection con = null;
+    ConexaoPostgresJDBC conJDBC;
 
     /**
      * Creates new form NewJFrame
      */
-    public FramePrincipal() {
+    public FramePrincipal() throws ClassNotFoundException, SQLException {
+        this.conJDBC = new ConexaoPostgresJDBC();
         initComponents();
         initComponentsExtenal();
+        conJDBC.getConnection();
     }
 
     public void initComponentsExtenal() {
@@ -231,6 +239,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         System.out.println("Tamanho da panel: " + this.jDesktopPane1.getSize());
         System.out.println("Tamanho da internal frame: " + this.jDesktopPane1.getAllFrames()[0].getSize());
         this.dispose();
+        conJDBC.close();
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnSairMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSairMouseEntered

@@ -1,7 +1,8 @@
 package br.udesc.ceavi.pin.infosaude.modelo;
 
 /**
- * Este enum define os Estados  (UF) do Brasil
+ * Este enum define os Estados (UF) do Brasil
+ *
  * @author Márcio José Mantau
  * @version 1.0
  * @since 15/03/2015
@@ -34,7 +35,7 @@ public enum Estado {
     SAO_PAULO("São Paulo"),
     SERGIPE("Sergipe"),
     TOCANTINS("Tocantins");
-    
+
     private final String estado;
 
     Estado(String estado) {

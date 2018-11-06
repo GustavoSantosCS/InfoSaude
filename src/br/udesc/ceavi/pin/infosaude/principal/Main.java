@@ -1,6 +1,9 @@
 package br.udesc.ceavi.pin.infosaude.principal;
 
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -20,8 +23,14 @@ public class Main implements Runnable{
 
     @Override
     public void run() {
-        FramePrincipal framePrincipal = new FramePrincipal();
-        framePrincipal.setVisible(true);
+        FramePrincipal framePrincipal;
+        try {
+            framePrincipal = new FramePrincipal();
+            framePrincipal.setVisible(true);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
 }

@@ -3,7 +3,7 @@ package br.udesc.ceavi.pin.infosaude.modelo;
 /**
  * Esta Classe define os atributos de Endereço
  *
-* @author Erick William Henschel
+ * @author Erick William Henschel
  * @author Fabio Frare
  * @author Gustavo de Carvalho Santos
  * @author Lucas Eduardo Nogueira
@@ -13,6 +13,7 @@ package br.udesc.ceavi.pin.infosaude.modelo;
  */
 public class Endereco {
 
+    private long id;
     private String bairro;
     private String cep;
     private String cidade;
@@ -39,6 +40,14 @@ public class Endereco {
         this.rua = rua;
         this.telefone = telefone;
         this.estado = estado;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getBairro() {
