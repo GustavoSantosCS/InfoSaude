@@ -3,11 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/lucas/OneDrive/Documentos/ESO%20-%20Engenharia%20de%20Software/PIN%20-%20Projeto%20Integrador/InfoSaude_Repositorio/InfoSaude/src/br/udesc/ceavi/pin/infosaude/view/frame/FramePrincipal.java</file>
             <file>file:/C:/Users/lucas/OneDrive/Documentos/ESO%20-%20Engenharia%20de%20Software/PIN%20-%20Projeto%20Integrador/InfoSaude_Repositorio/InfoSaude/src/br/udesc/ceavi/pin/infosaude/control/dao/ConexaoPostgresJDBC.java</file>
             <file>file:/C:/Users/lucas/OneDrive/Documentos/ESO%20-%20Engenharia%20de%20Software/PIN%20-%20Projeto%20Integrador/InfoSaude_Repositorio/InfoSaude/src/br/udesc/ceavi/pin/infosaude/modelo/Campanha.java</file>
             <file>file:/C:/Users/lucas/OneDrive/Documentos/ESO%20-%20Engenharia%20de%20Software/PIN%20-%20Projeto%20Integrador/InfoSaude_Repositorio/InfoSaude/src/br/udesc/ceavi/pin/infosaude/principal/Main.java</file>
             <file>file:/C:/Users/lucas/OneDrive/Documentos/ESO%20-%20Engenharia%20de%20Software/PIN%20-%20Projeto%20Integrador/InfoSaude_Repositorio/InfoSaude/src/br/udesc/ceavi/pin/infosaude/control/dao/ConexaoJDBC.java</file>
+=======
+            <file>file:/C:/Users/gusta/Desktop/Universidade/Pin%201/InfoSaude/InfoSaude/src/br/udesc/ceavi/pin/infosaude/view/frame/FramePrincipal.java</file>
+            <file>file:/C:/Users/gusta/Desktop/Universidade/Pin%201/InfoSaude/InfoSaude/src/br/udesc/ceavi/pin/infosaude/view/component/campoDeAcao/InternalFrameLancamentoDeVacina.java</file>
+            <file>file:/C:/Users/gusta/Desktop/Universidade/Pin%201/InfoSaude/InfoSaude/src/br/udesc/ceavi/pin/infosaude/view/component/FrameCadastroDeVacina.java</file>
+>>>>>>> a5ac8a56bad98ad8cd3d0a127d52b08cb7cd5227
         </group>
     </open-files>
 </project-private>
