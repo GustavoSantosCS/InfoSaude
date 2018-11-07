@@ -7,12 +7,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -23,18 +29,20 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 public class FramePrincipal extends javax.swing.JFrame {
 
     private MenuJPaneUniversao menu;
-    
+
 //    Connection con = null;
     ConexaoPostgresJDBC conJDBC;
 
     /**
      * Creates new form NewJFrame
      */
-    public FramePrincipal() throws ClassNotFoundException, SQLException {
-        this.conJDBC = new ConexaoPostgresJDBC();
+    public FramePrincipal(boolean banco) throws ClassNotFoundException, SQLException {
+        if (banco) {
+            this.conJDBC = new ConexaoPostgresJDBC();
+            conJDBC.getConnection();
+        }
         initComponents();
         initComponentsExtenal();
-        conJDBC.getConnection();
     }
 
     public void initComponentsExtenal() {

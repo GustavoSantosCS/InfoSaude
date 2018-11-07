@@ -25,7 +25,7 @@ public class Main implements Runnable{
     public void run() {
         FramePrincipal framePrincipal;
         try {
-            framePrincipal = new FramePrincipal();
+            framePrincipal = new FramePrincipal(false);
             framePrincipal.setVisible(true);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
