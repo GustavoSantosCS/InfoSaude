@@ -138,9 +138,6 @@ public class InternalFrameCampanha extends javax.swing.JInternalFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jpVacina = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        btnTomada = new javax.swing.JButton();
-        btnNaoTomadas = new javax.swing.JButton();
 
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -162,44 +159,11 @@ public class InternalFrameCampanha extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(20, 20, 20, 20);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
-        btnTomada.setText("Tomadas");
-        btnTomada.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTomadaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnTomada);
-
-        btnNaoTomadas.setText("Não Tomadas");
-        btnNaoTomadas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNaoTomadasActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnNaoTomadas);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        getContentPane().add(jPanel1, gridBagConstraints);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnTomadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTomadaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTomadaActionPerformed
-
-    private void btnNaoTomadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNaoTomadasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnNaoTomadasActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnNaoTomadas;
-    private javax.swing.JButton btnTomada;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpVacina;
     // End of variables declaration//GEN-END:variables
