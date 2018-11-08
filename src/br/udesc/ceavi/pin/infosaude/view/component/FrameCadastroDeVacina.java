@@ -1,15 +1,15 @@
 package br.udesc.ceavi.pin.infosaude.view.component;
 
+import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
+import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,21 +19,77 @@ import javax.swing.SpinnerNumberModel;
 public class FrameCadastroDeVacina extends javax.swing.JFrame {
 
     private List<PublicoAlvo> date;
+    private int aux = 0;
 
     public FrameCadastroDeVacina() {
         initComponents();
-        System.out.println(this.getSize());
         Dimension d = new Dimension(375, 275);
-
         this.jpVacina.setSize(d);
         this.jpVacina.setPreferredSize(d);
         this.jpVacina.setMaximumSize(new Dimension(d.getSize().width, 400));
-
+        date = new ArrayList<>();
     }
 
-    int aux = 0;
+    public Sexo getSexo(int index) {
+        Sexo S = null;
+        if (index == 0) {
+            S = Sexo.M;
+        }
+        if (index == 1) {
+            S = Sexo.F;
+        }
+        return S;
+    }
+
+    public List<PublicoAlvo> getPublicoAlvos() {
+        int idadeMax = -1;
+        int idadeMim = -1;
+        int sexo = -1;
+        int ponteiro = 0;
+        do {
+            if (ponteiro < 6) {
+                ponteiro++;
+                sexo = ((JComboBox) jpVacina.getComponent(ponteiro)).getSelectedIndex();
+                ponteiro++;
+                ponteiro++;
+                idadeMim = (int) ((JSpinner) jpVacina.getComponent(ponteiro)).getValue();
+                ponteiro++;
+                ponteiro++;
+                idadeMax = (int) ((JSpinner) jpVacina.getComponent(ponteiro)).getValue();
+                ponteiro++;
+                ponteiro++;
+            } else {
+                ponteiro++;
+                System.out.println(ponteiro);
+                sexo = ((JComboBox) jpVacina.getComponent(ponteiro)).getSelectedIndex();
+                ponteiro++;
+                ponteiro++;
+                idadeMim = (int) ((JSpinner) jpVacina.getComponent(ponteiro)).getValue();
+                ponteiro++;
+                ponteiro++;
+                idadeMax = (int) ((JSpinner) jpVacina.getComponent(ponteiro)).getValue();
+                ponteiro++;
+            }
+            if (sexo == 2) {
+                try {
+                    date.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(0)));
+                    date.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(1)));
+                } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+            } else {
+                try {
+                    date.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(sexo)));
+                } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+            }
+        } while (ponteiro < jpVacina.getComponentCount());
+        return date;
+    }
 
     public void addPublicoAlvo() {
+        btnMenos.setEnabled(true);
         if (aux < 4) {
             GridBagConstraints cons;
             lbSexo = new JLabel();
@@ -42,8 +98,6 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
             idadeMinima = new JSpinner();
             lbIdadeAte = new JLabel();
             idadeMaxima = new JSpinner();
-            btnAdd = new JButton();
-            btnMenos = new JButton();
             aux++;
             lbSexo.setText("Sexo");
             cons = new GridBagConstraints();
@@ -87,38 +141,31 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
             cons.insets = new Insets(5, 0, 5, 0);
             jpVacina.add(idadeMaxima, cons);
 
-            btnAdd.setText("+");
-            btnAdd.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    btnAddActionPerformed(evt);
-                }
-            });
-            cons = new GridBagConstraints();
-            cons.gridx = 6;
-            cons.gridy = aux;
-            cons.insets = new Insets(5, 0, 5, 0);
-            jpVacina.add(btnAdd, cons);
-
-            btnMenos.setText("-");
-            cons = new GridBagConstraints();
-            cons.gridx = 7;
-            cons.gridy = aux;
-            cons.insets = new Insets(5, 0, 5, 0);
-            jpVacina.add(btnMenos, cons);
             jpVacina.repaint();
         } else {
-            int e = 7;
-            int a = 2;
             JOptionPane.showMessageDialog(this, "Não é possivel Cadastrar Mais Publicos Alvos");
-            for (int i = 0; i < jpVacina.getComponentCount(); i++) {
-                if (i == e - 1) {
-                    System.out.println(i);
-                    jpVacina.getComponent(i).setEnabled(false);
-                    e = (7 * (a++ + 1) - i) - 1;
-                    System.out.println(e);
-                }
-            }
+            btnAdd.setEnabled(false);
         }
+    }
+
+    /**
+     * date = getPublicoAlvos(); for (int i = 0; i < date.size(); i++) {
+     * System.out.println(date.get(i).toString()); }
+     */
+    public void removePublicoAlvo() {
+        if (aux != 0) {
+            int aux = jpVacina.getComponentCount();
+            for (int i = 0; i < 6; i++) {
+                jpVacina.remove(jpVacina.getComponentCount() - 1);
+            }
+            btnAdd.setEnabled(true);
+        } else {
+            btnMenos.setEnabled(false);
+        }
+        if (aux > 0) {
+            aux--;
+        }
+        jpVacina.repaint();
     }
 
     @SuppressWarnings("unchecked")
@@ -141,11 +188,13 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
         idadeMinima = new javax.swing.JSpinner();
         lbIdadeAte = new javax.swing.JLabel();
         idadeMaxima = new javax.swing.JSpinner();
-        btnAdd = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         btnMenos = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("InfoSaúde - Cadastro de Vacina");
+        setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("Nome Da Vacina:*");
@@ -201,54 +250,73 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
         getContentPane().add(btnLimpar, gridBagConstraints);
 
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(btnCadastrar, gridBagConstraints);
 
-        jpVacina.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jpVacina.setBorder(javax.swing.BorderFactory.createTitledBorder("Publico Alvo"));
         jpVacina.setLayout(new java.awt.GridBagLayout());
 
         lbSexo.setText("Sexo");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 5, 0);
         jpVacina.add(lbSexo, gridBagConstraints);
 
         jcSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "F", "M e F" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 5, 0);
         jpVacina.add(jcSexo, gridBagConstraints);
 
         lbIdadeDe.setText("Idade de");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 5, 0);
         jpVacina.add(lbIdadeDe, gridBagConstraints);
 
         idadeMinima.setModel(new javax.swing.SpinnerNumberModel(1, 1, 120, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 5, 0);
         jpVacina.add(idadeMinima, gridBagConstraints);
 
         lbIdadeAte.setText("Até");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 5, 0);
         jpVacina.add(lbIdadeAte, gridBagConstraints);
 
         idadeMaxima.setModel(new javax.swing.SpinnerNumberModel(1, 1, 120, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 5, 0);
         jpVacina.add(idadeMaxima, gridBagConstraints);
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        btnMenos.setText("-");
+        btnMenos.setEnabled(false);
+        btnMenos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenosActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        jPanel1.add(btnMenos, gridBagConstraints);
 
         btnAdd.setText("+");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -257,17 +325,16 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        jPanel1.add(btnAdd, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jpVacina.add(btnAdd, gridBagConstraints);
-
-        btnMenos.setText("-");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jpVacina.add(btnMenos, gridBagConstraints);
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jpVacina.add(jPanel1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -284,8 +351,19 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         addPublicoAlvo();
-
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnMenosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenosActionPerformed
+        removePublicoAlvo();
+    }//GEN-LAST:event_btnMenosActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        date = new ArrayList<>();
+        date = getPublicoAlvos();
+        for (int i = 0; i < date.size(); i++) {
+            System.out.println(date.get(i).toString());
+        }
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -332,6 +410,7 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox<String> jcSexo;
     private javax.swing.JPanel jpVacina;
     private javax.swing.JLabel lbIdadeAte;

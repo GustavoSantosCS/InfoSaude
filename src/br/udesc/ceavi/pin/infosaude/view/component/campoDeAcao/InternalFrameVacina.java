@@ -20,9 +20,6 @@ public class InternalFrameVacina extends javax.swing.JInternalFrame {
     public InternalFrameVacina() {
         initComponents();
         this.setTitle("Tela de Vacinas");
-        for (int i = 0; i < 20; i++) {
-            addVacina(new Vacina(new Date(2000, 12, 30), 1, "Vacina " + i, new Profissional("Marta Jovana Doarte Suaza"), new PublicoAlvo(9, 7, Sexo.F)));
-        }
     }
 
     public void addVacina(Vacina vacina) {

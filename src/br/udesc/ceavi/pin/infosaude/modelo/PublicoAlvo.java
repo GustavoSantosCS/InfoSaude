@@ -1,5 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.modelo;
 
+import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
+
 /**
  * Esta Classe define os atributos do Publico Alvo
  *
@@ -24,8 +26,11 @@ public class PublicoAlvo {
     }
 
     //Construtor
-    public PublicoAlvo(int maxIdade, int minIdade, Sexo sexo) {
+    public PublicoAlvo(int maxIdade, int minIdade, Sexo sexo) throws  IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException {
         super();
+        if (maxIdade < minIdade) {
+            throw new IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException();
+        }
         this.maxIdade = maxIdade;
         this.minIdade = minIdade;
         this.sexo = sexo;
@@ -65,7 +70,7 @@ public class PublicoAlvo {
 
     @Override
     public String toString() {
-        return "Idade Maxima= " + maxIdade + " Idade Minima= " + minIdade + " Sexo=" + sexo;
+        return "Idade Minima= " + minIdade + " Idade Maxima= " + maxIdade + " Sexo=" + sexo;
     }
 
 }

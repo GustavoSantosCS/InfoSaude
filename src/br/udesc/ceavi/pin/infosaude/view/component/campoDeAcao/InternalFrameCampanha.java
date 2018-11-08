@@ -1,5 +1,6 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
+import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
 import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
 import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
@@ -17,6 +18,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,12 +34,16 @@ public class InternalFrameCampanha extends javax.swing.JInternalFrame {
         System.out.println(new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).toString());
         initComponents();
         List<PublicoAlvo> lista = new ArrayList<>();
-        lista.add(new PublicoAlvo(10, 6, Sexo.M));
+        try {
+            lista.add(new PublicoAlvo(10, 6, Sexo.M));
         lista.add(new PublicoAlvo(10, 6, Sexo.F));
         lista.add(new PublicoAlvo(20, 4, Sexo.M));
         lista.add(new PublicoAlvo(20, 4, Sexo.F));
         lista.add(new PublicoAlvo(100, 60, Sexo.M));
         lista.add(new PublicoAlvo(100, 60, Sexo.F));
+        } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
+            Logger.getLogger(InternalFrameCampanha.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.setTitle("Tela de Campanha");
         for (int i = 0; i < 10; i++) {
             addCampanha(new Campanha("Slogam      " + (i + 1), new Vacina(new Date(2008, 1, 16), 1, "Vacina " + (i + 1), new Profissional(), lista),
