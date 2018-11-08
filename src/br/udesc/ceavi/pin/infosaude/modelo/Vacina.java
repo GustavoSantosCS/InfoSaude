@@ -39,6 +39,14 @@ public class Vacina {
         this.profissional = profissional;
         this.publicosAlvos = publicosAlvos;
     }
+    public Vacina(float dose, String vacina,  List<PublicoAlvo> publicosAlvos) {
+        super();
+        this.dataAplicacao = null;
+        this.dose = dose;
+        this.vacina = vacina;
+        this.profissional = null;
+        this.publicosAlvos = publicosAlvos;
+    }
 
     public Vacina(Date dataAplicacao, float dose, String vacina, Profissional profissional, PublicoAlvo publicosAlvos) {
         super();
