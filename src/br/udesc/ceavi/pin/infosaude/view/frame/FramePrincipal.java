@@ -1,6 +1,11 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
+import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
+import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario_Logado;
+import br.udesc.ceavi.pin.infosaude.principal.Main;
 import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
 import java.awt.BorderLayout;
@@ -53,8 +58,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(lbTitulo, new Dimension(280, 30));
         setSize(lbBusca, new Dimension(26, 26));
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width);
-        jpMenu.add(menu);
-        menu.menuSemUsuario();
+        jpMenu.add(menu);        
         addPanel(new InternalFrameVacina());
     }
 
@@ -291,4 +295,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lbTituloMenu;
     private javax.swing.JTextField tfBusca;
     // End of variables declaration//GEN-END:variables
+
+    
+
 }
