@@ -1,5 +1,10 @@
 package br.udesc.ceavi.pin.infosaude.view.component;
 
+import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
+import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario_Logado;
+import br.udesc.ceavi.pin.infosaude.principal.Main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -26,26 +31,43 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
     public MenuJPaneUniversao(int largura) {
         di = new Dimension(largura - 15, 360);
         initComponents();
+        getVerificaUsuario();
     }
 
     public void menuSemUsuario() {
         addButao(new JButton("Home"), null);
         addButao(new JButton("Login"), null);
         addButao(new JButton("Cadastrar"), null);
-        addButao(new JButton("Sobre"), null);
         addButao(new JButton("Contato"), null);
     }
 
     public void menuUsuarioComum() {
-
+        addButao(new JButton("Home"), null);
+        addButao(new JButton("Consultar Vacinas"), null);
+        addButao(new JButton("Consultar Campanhas"), null);       
+        addButao(new JButton("Dados Pessoais"), null);
+        addButao(new JButton("Contato"), null);
     }
 
     public void menuUsuarioProfissional() {
-
+        addButao(new JButton("Home"), null);
+        addButao(new JButton("Consultar Vacinas"), null);
+        addButao(new JButton("Cadastrar Usuarios"), null);       
+        addButao(new JButton("Cadastrar Campanhas"), null);
+        addButao(new JButton("Relatórios"), null);
+        addButao(new JButton("Contato"), null);
     }
 
     public void menuUsuarioInstituicao() {
-
+        addButao(new JButton("Home"), null);
+        addButao(new JButton("Consultar Vacinas"), null);
+        addButao(new JButton("Cadastrar Profissional"), null);       
+        addButao(new JButton("Cadastrar Campanhas"), null);
+        addButao(new JButton("Relatórios"), null);
+        addButao(new JButton("Contato"), null);
+    }
+    public void initMenu(){
+        
     }
 
     public void addButao(JButton btn, ActionListener actionListener) {
@@ -102,6 +124,23 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         }
 
     }
+    public void getVerificaUsuario() {
+        Usuario_Logado verifica = Main.privilegio;
+        if (verifica instanceof Usuario) {
+            menuUsuarioComum();            
+        }
+        if(verifica instanceof Profissional){
+            menuUsuarioProfissional();
+        }
+        if(verifica instanceof Instituicao){
+            menuUsuarioInstituicao();
+        }
+        if(verifica == null){
+            menuSemUsuario();
+        }
+    }
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

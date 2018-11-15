@@ -1,5 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.principal;
 
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario_Logado;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -19,7 +21,11 @@ public class Main implements Runnable{
         Main main = new Main();
         Thread thread = new Thread(main);
         thread.start();
+        
     }
+    public static Usuario_Logado privilegio = new Usuario();
+    
+    
 
     @Override
     public void run() {
