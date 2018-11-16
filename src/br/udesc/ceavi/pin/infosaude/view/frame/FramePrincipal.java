@@ -1,6 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
+import br.udesc.ceavi.pin.infosaude.principal.Main;
 import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
 import java.awt.BorderLayout;
@@ -36,6 +37,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         }
         initComponents();
         initComponentsExtenal();
+        gerenciarUsuarioLogado();
     }
 
     public void initComponentsExtenal() {
@@ -45,25 +47,32 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(tfBusca, new Dimension(52, 32));
         setSize(lbTitulo, new Dimension(280, 30));
         setSize(lbBusca, new Dimension(26, 26));
-        menu = new MenuJPaneUniversao(this.jpColuna.getSize().width,this);
-        jpMenu.add(menu);        
+        menu = new MenuJPaneUniversao(this.jpColuna.getSize().width, this);
+        jpMenu.add(menu);
         addPanel(new InternalFrameVacina());
     }
 
     public void addPanel(JInternalFrame frame) {
-        jDesktopPane1.removeAll();
-        frame.setMinimumSize(this.jDesktopPane1.getSize());
-        ((BasicInternalFrameUI) frame.getUI()).setNorthPane(null); //retirar o painel superior
-        frame.setBorder(null);
-        frame.setVisible(true);
-        jDesktopPane1.add(frame, BorderLayout.BEFORE_FIRST_LINE);
-        try {
-            frame.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            JOptionPane.showMessageDialog(null, "Erro Não Aguardado");
-            this.dispose();
+        if(jDesktopPane1.getAllFrames().length > 0){
+            if(frame.getTitle().equals(jDesktopPane1.getAllFrames()[0].getTitle())){
+                System.out.println("Foi");
+                return;
+            }
         }
-        lbTitulo.setText("" + frame.getTitle());
+        
+            jDesktopPane1.removeAll();
+            frame.setMinimumSize(this.jDesktopPane1.getSize());
+            ((BasicInternalFrameUI) frame.getUI()).setNorthPane(null); //retirar o painel superior
+            frame.setBorder(null);
+            frame.setVisible(true);
+            jDesktopPane1.add(frame, BorderLayout.BEFORE_FIRST_LINE);
+            try {
+                frame.setMaximum(true);
+            } catch (PropertyVetoException ex) {
+                JOptionPane.showMessageDialog(null, "Erro Não Aguardado");
+                this.dispose();
+            }
+            lbTitulo.setText("" + frame.getTitle());
     }
 
     public void setSize(Component c, Dimension size) {
@@ -85,6 +94,10 @@ public class FramePrincipal extends javax.swing.JFrame {
         lbTitulo = new javax.swing.JLabel();
         tfBusca = new javax.swing.JTextField();
         lbBusca = new javax.swing.JLabel();
+        jpUsuarioLogado = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lbUsuario = new javax.swing.JLabel();
+        btnSignOffLogin = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -178,6 +191,51 @@ public class FramePrincipal extends javax.swing.JFrame {
             }
         });
 
+        jpUsuarioLogado.setBackground(new java.awt.Color(63, 72, 204));
+
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Usuario:");
+
+        lbUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        lbUsuario.setText("Usuario:");
+
+        btnSignOffLogin.setBackground(new java.awt.Color(63, 72, 204));
+        btnSignOffLogin.setFont(new java.awt.Font("Times New Roman", 1, 13)); // NOI18N
+        btnSignOffLogin.setForeground(new java.awt.Color(255, 255, 255));
+        btnSignOffLogin.setText("Sign off");
+        btnSignOffLogin.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(155, 160, 234), 1, true));
+        btnSignOffLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSignOffLoginActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jpUsuarioLogadoLayout = new javax.swing.GroupLayout(jpUsuarioLogado);
+        jpUsuarioLogado.setLayout(jpUsuarioLogadoLayout);
+        jpUsuarioLogadoLayout.setHorizontalGroup(
+            jpUsuarioLogadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpUsuarioLogadoLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jpUsuarioLogadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jpUsuarioLogadoLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                        .addComponent(btnSignOffLogin)))
+                .addGap(10, 10, 10))
+        );
+        jpUsuarioLogadoLayout.setVerticalGroup(
+            jpUsuarioLogadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpUsuarioLogadoLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jpUsuarioLogadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnSignOffLogin))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbUsuario)
+                .addGap(10, 10, 10))
+        );
+
         javax.swing.GroupLayout jpTopoLayout = new javax.swing.GroupLayout(jpTopo);
         jpTopo.setLayout(jpTopoLayout);
         jpTopoLayout.setHorizontalGroup(
@@ -186,10 +244,15 @@ public class FramePrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lbTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(lbBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jpTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpTopoLayout.createSequentialGroup()
+                        .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1)
+                        .addComponent(lbBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpTopoLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jpUsuarioLogado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10))
         );
         jpTopoLayout.setVerticalGroup(
             jpTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,7 +263,9 @@ public class FramePrincipal extends javax.swing.JFrame {
                         .addGroup(jpTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbBusca)
                             .addComponent(tfBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(11, 11, 11)
+                        .addComponent(jpUsuarioLogado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10))
                     .addComponent(lbTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -268,19 +333,42 @@ public class FramePrincipal extends javax.swing.JFrame {
         tfBusca.revalidate();
     }//GEN-LAST:event_tfBuscaFocusLost
 
+    private void btnSignOffLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignOffLoginActionPerformed
+        if (Main.privilegio == null) {
+            this.addPanel(new InternalFrameLogin());
+            gerenciarUsuarioLogado();
+        } else {
+            Main.privilegio = null;
+            this.addPanel(new InternalFrameInstituicao());
+            gerenciarUsuarioLogado();
+        }
+    }//GEN-LAST:event_btnSignOffLoginActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSair;
+    private javax.swing.JButton btnSignOffLogin;
     private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jpColuna;
     private javax.swing.JPanel jpMenu;
     private javax.swing.JPanel jpTopo;
+    private javax.swing.JPanel jpUsuarioLogado;
     private javax.swing.JLabel lbBusca;
     private javax.swing.JLabel lbTitulo;
     private javax.swing.JLabel lbTituloMenu;
+    private javax.swing.JLabel lbUsuario;
     private javax.swing.JTextField tfBusca;
     // End of variables declaration//GEN-END:variables
 
-    
+    private void gerenciarUsuarioLogado() {
+        if (Main.privilegio == null) {
+            btnSignOffLogin.setText("Login");
+            this.lbUsuario.setText("Realize Login");
+        } else {
+            btnSignOffLogin.setText("Sing off");
+            this.lbUsuario.setText(Main.privilegio.getUsuario());
+        }
+    }
 
 }

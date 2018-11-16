@@ -29,6 +29,7 @@ public class Pessoa implements Usuario_Logado{
     //Construtor
     public Pessoa() {
         super();
+        this.nome = "Teste InfoSaude";
     }
 
     //Construtor
@@ -123,6 +124,11 @@ public class Pessoa implements Usuario_Logado{
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    @Override
+    public String getUsuario() {
+        return nome;
     }
 
 }

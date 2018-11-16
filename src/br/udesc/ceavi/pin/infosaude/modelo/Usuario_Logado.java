@@ -6,4 +6,5 @@ package br.udesc.ceavi.pin.infosaude.modelo;
  */
 public interface Usuario_Logado {
     public long getId();
+    public String getUsuario();
 }

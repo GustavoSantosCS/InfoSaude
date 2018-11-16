@@ -2,6 +2,7 @@ package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
 import br.udesc.ceavi.pin.infosaude.modelo.Estado;
 import java.awt.Dimension;
+import java.util.Objects;
 
 /**
  *
@@ -438,6 +439,135 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InternalFrameCadastroPessoa other = (InternalFrameCadastroPessoa) obj;
+        if (!Objects.equals(this.jButton1, other.jButton1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jButton4, other.jButton4)) {
+            return false;
+        }
+        if (!Objects.equals(this.jButton5, other.jButton5)) {
+            return false;
+        }
+        if (!Objects.equals(this.jCSexo, other.jCSexo)) {
+            return false;
+        }
+        if (!Objects.equals(this.jComboBox1, other.jComboBox1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel1, other.jLabel1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel10, other.jLabel10)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel11, other.jLabel11)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel12, other.jLabel12)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel13, other.jLabel13)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel14, other.jLabel14)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel2, other.jLabel2)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel3, other.jLabel3)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel4, other.jLabel4)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel5, other.jLabel5)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel6, other.jLabel6)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel7, other.jLabel7)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel8, other.jLabel8)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel9, other.jLabel9)) {
+            return false;
+        }
+        if (!Objects.equals(this.jPanel1, other.jPanel1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jScrollPane1, other.jScrollPane1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpBTN, other.jpBTN)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpDadosDeAcesso, other.jpDadosDeAcesso)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpDadosPessoais, other.jpDadosPessoais)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpDadosSus, other.jpDadosSus)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpEndereco, other.jpEndereco)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfBairro, other.tfBairro)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfCEP, other.tfCEP)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfCPF, other.tfCPF)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfCidade, other.tfCidade)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfComplemento, other.tfComplemento)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfDataNascimento, other.tfDataNascimento)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfNome, other.tfNome)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfNumero, other.tfNumero)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfRua, other.tfRua)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfSUS, other.tfSUS)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfSenha, other.tfSenha)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfUsuario, other.tfUsuario)) {
+            return false;
+        }
+        return true;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

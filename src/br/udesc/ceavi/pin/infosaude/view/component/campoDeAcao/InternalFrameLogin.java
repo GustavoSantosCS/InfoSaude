@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.Objects;
 
 /**
  *
@@ -17,9 +13,6 @@ public class InternalFrameLogin extends javax.swing.JInternalFrame {
     Dimension dB = new Dimension(120, 30);
     Dimension dt = new Dimension(250, 27);
 
-    /**
-     * Creates new form InternalFrameLogin
-     */
     public InternalFrameLogin() {
         initComponents();
         this.setTitle("Login");
@@ -56,7 +49,6 @@ public class InternalFrameLogin extends javax.swing.JInternalFrame {
         tfUsuario = new javax.swing.JTextField();
         btnRecuperarSenha = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(195, 195, 195));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel1.setBackground(new java.awt.Color(46, 179, 211));
@@ -184,6 +176,51 @@ public class InternalFrameLogin extends javax.swing.JInternalFrame {
     private void btnRecuperarSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecuperarSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRecuperarSenhaActionPerformed
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InternalFrameLogin other = (InternalFrameLogin) obj;
+        if (!Objects.equals(this.dB, other.dB)) {
+            return false;
+        }
+        if (!Objects.equals(this.dt, other.dt)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnLogin, other.btnLogin)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnRecuperarSenha, other.btnRecuperarSenha)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnRegistar, other.btnRegistar)) {
+            return false;
+        }
+        if (!Objects.equals(this.jPanel1, other.jPanel1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jPasswordField1, other.jPasswordField1)) {
+            return false;
+        }
+        if (!Objects.equals(this.lbSenha, other.lbSenha)) {
+            return false;
+        }
+        if (!Objects.equals(this.lbUsuario, other.lbUsuario)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfUsuario, other.tfUsuario)) {
+            return false;
+        }
+        return true;
+    }
 
 public String getJPanelSize(){
     return this.jPanel1.getSize().toString();

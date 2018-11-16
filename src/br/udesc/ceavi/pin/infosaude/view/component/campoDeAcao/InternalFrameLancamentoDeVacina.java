@@ -1,7 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
-import br.udesc.ceavi.pin.infosaude.modelo.Estado;
 import java.awt.Dimension;
+import java.util.Objects;
 
 /**
  *
@@ -441,6 +441,141 @@ public class InternalFrameLancamentoDeVacina extends javax.swing.JInternalFrame 
     private void btnCadastarVacinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastarVacinaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCadastarVacinaActionPerformed
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InternalFrameLancamentoDeVacina other = (InternalFrameLancamentoDeVacina) obj;
+        if (this.registroValido != other.registroValido) {
+            return false;
+        }
+        if (!Objects.equals(this.btnBuscar_Usuario, other.btnBuscar_Usuario)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnBuscar_Vacina, other.btnBuscar_Vacina)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnCadastarVacina, other.btnCadastarVacina)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnValidar_Profissional, other.btnValidar_Profissional)) {
+            return false;
+        }
+        if (!Objects.equals(this.cbDose, other.cbDose)) {
+            return false;
+        }
+        if (!Objects.equals(this.jButton2, other.jButton2)) {
+            return false;
+        }
+        if (!Objects.equals(this.jButton3, other.jButton3)) {
+            return false;
+        }
+        if (!Objects.equals(this.jButton4, other.jButton4)) {
+            return false;
+        }
+        if (!Objects.equals(this.jButton5, other.jButton5)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel1, other.jLabel1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel10, other.jLabel10)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel15, other.jLabel15)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel16, other.jLabel16)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel2, other.jLabel2)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel3, other.jLabel3)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel4, other.jLabel4)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel5, other.jLabel5)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel6, other.jLabel6)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel7, other.jLabel7)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel8, other.jLabel8)) {
+            return false;
+        }
+        if (!Objects.equals(this.jLabel9, other.jLabel9)) {
+            return false;
+        }
+        if (!Objects.equals(this.jPanel1, other.jPanel1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jScrollPane1, other.jScrollPane1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpBTN, other.jpBTN)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpDadosDeAcesso, other.jpDadosDeAcesso)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpDadosSus, other.jpDadosSus)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpDadosSus1, other.jpDadosSus1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpUsuario, other.jpUsuario)) {
+            return false;
+        }
+        if (!Objects.equals(this.lbCampanha_PeriodoFinal, other.lbCampanha_PeriodoFinal)) {
+            return false;
+        }
+        if (!Objects.equals(this.lbCampanha_PeriodoInicial, other.lbCampanha_PeriodoInicial)) {
+            return false;
+        }
+        if (!Objects.equals(this.lbVacina_Campanha, other.lbVacina_Campanha)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfCPF, other.tfCPF)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfNome, other.tfNome)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfNumSUS, other.tfNumSUS)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfObservacoe_Vacina, other.tfObservacoe_Vacina)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfSenha, other.tfSenha)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfSlogam_Campanha, other.tfSlogam_Campanha)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfUsuario, other.tfUsuario)) {
+            return false;
+        }
+        if (!Objects.equals(this.tfVacina, other.tfVacina)) {
+            return false;
+        }
+        return true;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

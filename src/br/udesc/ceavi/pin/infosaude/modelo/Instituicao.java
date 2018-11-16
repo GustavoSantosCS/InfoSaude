@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  * @since 03/11/2018
  */
-public class Instituicao implements Usuario_Logado{
+public class Instituicao implements Usuario_Logado {
 
     private long id;
     private String cnpj;
@@ -26,6 +26,7 @@ public class Instituicao implements Usuario_Logado{
     //Construtor
     public Instituicao() {
         super();
+        this.nome = "Teste InfoSaude";
     }
 
     //Construtor
@@ -92,6 +93,11 @@ public class Instituicao implements Usuario_Logado{
 
     public void setCampanhas(List<Campanha> campanhas) {
         this.campanhas = campanhas;
+    }
+
+    @Override
+    public String getUsuario() {
+        return nome;
     }
 
 }

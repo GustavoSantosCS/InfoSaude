@@ -1,8 +1,5 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
-import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
-import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
-import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,7 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Label;
-import java.util.Date;
+import java.util.Objects;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -172,6 +169,36 @@ public class InternalFrameVacina extends javax.swing.JInternalFrame {
     private void btnNaoTomadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNaoTomadasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNaoTomadasActionPerformed
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InternalFrameVacina other = (InternalFrameVacina) obj;
+        if (!Objects.equals(this.btnNaoTomadas, other.btnNaoTomadas)) {
+            return false;
+        }
+        if (!Objects.equals(this.btnTomada, other.btnTomada)) {
+            return false;
+        }
+        if (!Objects.equals(this.jPanel1, other.jPanel1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jScrollPane1, other.jScrollPane1)) {
+            return false;
+        }
+        if (!Objects.equals(this.jpVacina, other.jpVacina)) {
+            return false;
+        }
+        return true;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
