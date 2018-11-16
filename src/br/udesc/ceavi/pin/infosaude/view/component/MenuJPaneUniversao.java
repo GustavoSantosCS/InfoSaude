@@ -41,10 +41,11 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         di = new Dimension(largura - 15, 360);
         initComponents();
         this.tela = tela;
-        getVerificaUsuario();
     }
 
     public void menuSemUsuario() {
+        //Remove butoes ja adcionadas e set parametro usado na add de novo
+        removerMenu();
         List<JButton> lista = new ArrayList<>();
         lista.add(new JButton("Home"));
         lista.add(new JButton("Login"));
@@ -58,6 +59,8 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
     }
 
     public void menuUsuarioComum() {
+        //Remove butoes ja adcionadas e set parametro usado na add de novo
+        removerMenu();
         List<JButton> lista = new ArrayList<>();
         lista.add(new JButton("Home"));
         lista.add(new JButton("Consultar Vacinas"));
@@ -71,6 +74,8 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
     }
 
     public void menuUsuarioProfissional() {
+        //Remove butoes ja adcionadas e set parametro usado na add de novo
+        removerMenu();
         List<JButton> lista = new ArrayList<>();
         lista.add(new JButton("Home"));
         lista.add(new JButton("Consultar Vacinas"));
@@ -78,13 +83,15 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         lista.add(new JButton("Cadastrar Campanhas"));
         lista.add(new JButton("Relatórios"));
         lista.add(new JButton("Contato"));
-        listener = new ListenerMenuUsuarioProfissional(lista,tela);
+        listener = new ListenerMenuUsuarioProfissional(lista, tela);
         for (int i = 0; i < lista.size(); i++) {
             addButao(lista.get(i));
         }
     }
 
     public void menuUsuarioInstituicao() {
+        //Remove butoes ja adcionadas e set parametro usado na add de novo
+        removerMenu();
         List<JButton> lista = new ArrayList<>();
         lista.add(new JButton("Home"));
         lista.add(new JButton("Consultar Vacinas"));
@@ -92,14 +99,10 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         lista.add(new JButton("Cadastrar Campanhas"));
         lista.add(new JButton("Relatórios"));
         lista.add(new JButton("Contato"));
-        listener = new ListenerMenuUsuarioIntituicao(lista,tela);
+        listener = new ListenerMenuUsuarioIntituicao(lista, tela);
         for (int i = 0; i < lista.size(); i++) {
             addButao(lista.get(i));
         }
-    }
-
-    public void initMenu() {
-
     }
 
     public void addButao(JButton btn) {
@@ -154,7 +157,7 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
 
     }
 
-    public void getVerificaUsuario() {
+    public void initMenu() {
         Usuario_Logado verifica = Main.privilegio;
         if (verifica instanceof Usuario) {
             menuUsuarioComum();
@@ -168,6 +171,19 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         if (verifica == null) {
             menuSemUsuario();
         }
+    }
+
+    public void removerMenu() {
+        removeAll();
+        consX = 1;
+        lbTitulo.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
+        lbTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbTitulo.setText("Menu");
+        cons = new java.awt.GridBagConstraints();
+        cons.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        cons.weightx = 1.0;
+        cons.insets = new java.awt.Insets(0, 0, 35, 0);
+        add(lbTitulo, cons);
     }
 
     @SuppressWarnings("unchecked")

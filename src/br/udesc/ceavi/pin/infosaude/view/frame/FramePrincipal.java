@@ -53,26 +53,26 @@ public class FramePrincipal extends javax.swing.JFrame {
     }
 
     public void addPanel(JInternalFrame frame) {
-        if(jDesktopPane1.getAllFrames().length > 0){
-            if(frame.getTitle().equals(jDesktopPane1.getAllFrames()[0].getTitle())){
+        if (jDesktopPane1.getAllFrames().length > 0) {
+            if (frame.getTitle().equals(jDesktopPane1.getAllFrames()[0].getTitle())) {
                 System.out.println("Foi");
                 return;
             }
         }
-        
-            jDesktopPane1.removeAll();
-            frame.setMinimumSize(this.jDesktopPane1.getSize());
-            ((BasicInternalFrameUI) frame.getUI()).setNorthPane(null); //retirar o painel superior
-            frame.setBorder(null);
-            frame.setVisible(true);
-            jDesktopPane1.add(frame, BorderLayout.BEFORE_FIRST_LINE);
-            try {
-                frame.setMaximum(true);
-            } catch (PropertyVetoException ex) {
-                JOptionPane.showMessageDialog(null, "Erro Não Aguardado");
-                this.dispose();
-            }
-            lbTitulo.setText("" + frame.getTitle());
+
+        jDesktopPane1.removeAll();
+        frame.setMinimumSize(this.jDesktopPane1.getSize());
+        ((BasicInternalFrameUI) frame.getUI()).setNorthPane(null); //retirar o painel superior
+        frame.setBorder(null);
+        frame.setVisible(true);
+        jDesktopPane1.add(frame, BorderLayout.BEFORE_FIRST_LINE);
+        try {
+            frame.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            JOptionPane.showMessageDialog(null, "Erro Não Aguardado");
+            this.dispose();
+        }
+        lbTitulo.setText("" + frame.getTitle());
     }
 
     public void setSize(Component c, Dimension size) {
@@ -133,7 +133,6 @@ public class FramePrincipal extends javax.swing.JFrame {
         });
 
         jpMenu.setBackground(new java.awt.Color(195, 195, 195));
-        jpMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         java.awt.GridBagLayout jpMenuLayout = new java.awt.GridBagLayout();
         jpMenuLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         jpMenuLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
@@ -335,13 +334,14 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void btnSignOffLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignOffLoginActionPerformed
         if (Main.privilegio == null) {
+            menu.initMenu();
             this.addPanel(new InternalFrameLogin());
-            gerenciarUsuarioLogado();
         } else {
+            menu.initMenu();
             Main.privilegio = null;
             this.addPanel(new InternalFrameInstituicao());
-            gerenciarUsuarioLogado();
         }
+        gerenciarUsuarioLogado();
     }//GEN-LAST:event_btnSignOffLoginActionPerformed
 
 
@@ -362,6 +362,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void gerenciarUsuarioLogado() {
+        menu.initMenu();
         if (Main.privilegio == null) {
             btnSignOffLogin.setText("Login");
             this.lbUsuario.setText("Realize Login");

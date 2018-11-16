@@ -24,7 +24,6 @@ public class ListenerMenuSemUsuario implements Listener {
     public ListenerMenuSemUsuario(List<JButton> listaDeButao, FramePrincipal tela) {
         this.listaDeButao = listaDeButao;
         this.tela = tela;
-        System.out.println("Compilada");
         addActions();
     }
 
