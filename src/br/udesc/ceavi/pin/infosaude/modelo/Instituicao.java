@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  * @since 03/11/2018
  */
-public class Instituicao {
+public class Instituicao implements Usuario_Logado{
 
     private long id;
     private String cnpj;

@@ -13,7 +13,7 @@ import java.util.Date;
  * @version 1.0
  * @since 03/11/2018
  */
-public class Pessoa {
+public class Pessoa implements Usuario_Logado{
 
     private long id;
     private String cpf;

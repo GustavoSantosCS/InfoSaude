@@ -39,9 +39,13 @@ public class ConexaoPostgresJDBC {
 
             Properties properties = new Properties();
             properties.put("user", "postgres");
+<<<<<<< HEAD
             properties.put("password", "123456");
+=======
+            properties.put("password", "123");
+>>>>>>> d8fae54a1345eaf5facd54a28e31b744170c0d87
 
-            this.con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/InfoSaude?ApplicationName=InfoSaude", properties);
+            this.con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Infosaude?ApplicationName=Projeto-InfoSaude", properties);
             this.con.setAutoCommit(false);
             JOptionPane.showMessageDialog(null, "Conectado");
 
