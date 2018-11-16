@@ -1,5 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.principal;
 
+import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
+import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
 import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
 import br.udesc.ceavi.pin.infosaude.modelo.Usuario_Logado;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
@@ -23,7 +25,7 @@ public class Main implements Runnable{
         thread.start();
         
     }
-    public static Usuario_Logado privilegio = new Usuario();
+    public static Usuario_Logado privilegio = new Profissional();
     
     
 

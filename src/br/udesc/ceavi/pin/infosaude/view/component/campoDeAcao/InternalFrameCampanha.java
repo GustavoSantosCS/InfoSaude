@@ -12,11 +12,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Label;
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +43,7 @@ public class InternalFrameCampanha extends javax.swing.JInternalFrame {
             Logger.getLogger(InternalFrameCampanha.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.setTitle("Tela de Campanha");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             addCampanha(new Campanha("Slogam      " + (i + 1), new Vacina(new Date(2008, 1, 16), 1, "Vacina " + (i + 1), new Profissional(), lista),
                     new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, calendar.get(Calendar.DAY_OF_MONTH)),
                     new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))));
@@ -149,9 +147,8 @@ public class InternalFrameCampanha extends javax.swing.JInternalFrame {
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jScrollPane1.setBackground(new java.awt.Color(46, 179, 211));
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jScrollPane1.setBorder(null);
         jScrollPane1.setMaximumSize(null);
-        jScrollPane1.setMinimumSize(null);
 
         jpVacina.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(jpVacina);

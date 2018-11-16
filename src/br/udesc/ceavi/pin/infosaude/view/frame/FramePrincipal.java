@@ -1,29 +1,17 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
-import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
-import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
-import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
-import br.udesc.ceavi.pin.infosaude.modelo.Usuario_Logado;
-import br.udesc.ceavi.pin.infosaude.principal.Main;
 import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
 import java.beans.PropertyVetoException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
@@ -57,7 +45,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(tfBusca, new Dimension(52, 32));
         setSize(lbTitulo, new Dimension(280, 30));
         setSize(lbBusca, new Dimension(26, 26));
-        menu = new MenuJPaneUniversao(this.jpColuna.getSize().width);
+        menu = new MenuJPaneUniversao(this.jpColuna.getSize().width,this);
         jpMenu.add(menu);        
         addPanel(new InternalFrameVacina());
     }
@@ -247,9 +235,6 @@ public class FramePrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-        System.out.println("Tamanho da Frame: " + this.getSize());
-        System.out.println("Tamanho da panel: " + this.jDesktopPane1.getSize());
-        System.out.println("Tamanho da internal frame: " + this.jDesktopPane1.getAllFrames()[0].getSize());
         this.dispose();
         conJDBC.close();
     }//GEN-LAST:event_btnSairActionPerformed

@@ -192,7 +192,7 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
         btnMenos = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("InfoSaúde - Cadastro de Vacina");
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());

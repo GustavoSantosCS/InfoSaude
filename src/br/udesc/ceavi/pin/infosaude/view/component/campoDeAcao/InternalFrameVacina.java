@@ -124,9 +124,8 @@ public class InternalFrameVacina extends javax.swing.JInternalFrame {
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jScrollPane1.setBackground(new java.awt.Color(46, 179, 211));
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jScrollPane1.setBorder(null);
         jScrollPane1.setMaximumSize(null);
-        jScrollPane1.setMinimumSize(null);
 
         jpVacina.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(jpVacina);
