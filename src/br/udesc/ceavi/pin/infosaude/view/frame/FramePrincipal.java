@@ -52,11 +52,10 @@ public class FramePrincipal extends javax.swing.JFrame {
         addPanel(new InternalFrameTelaInicial());
     }
 
-    public void addPanel(JInternalFrame frame) {
+    public boolean addPanel(JInternalFrame frame) {
         if (jDesktopPane1.getAllFrames().length > 0) {
             if (frame.getTitle().equals(jDesktopPane1.getAllFrames()[0].getTitle())) {
-                System.out.println("Foi");
-                return;
+                return false;
             }
         }
 
@@ -73,6 +72,7 @@ public class FramePrincipal extends javax.swing.JFrame {
             this.dispose();
         }
         lbTitulo.setText("" + frame.getTitle());
+        return true;
     }
 
     public void setSize(Component c, Dimension size) {
@@ -300,7 +300,6 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         this.dispose();
-        conJDBC.close();
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnSairMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSairMouseEntered
@@ -334,14 +333,14 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void btnSignOffLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignOffLoginActionPerformed
         if (Main.privilegio == null) {
-            menu.initMenu();
-            this.addPanel(new InternalFrameLogin());
+            if (this.addPanel(new InternalFrameLogin())) {
+                gerenciarUsuarioLogado();
+            }
         } else {
-            menu.initMenu();
             Main.privilegio = null;
-            this.addPanel(new InternalFrameInstituicao());
+            if (this.addPanel(new InternalFrameTelaInicial()));
+            gerenciarUsuarioLogado();
         }
-        gerenciarUsuarioLogado();
     }//GEN-LAST:event_btnSignOffLoginActionPerformed
 
 

@@ -158,6 +158,9 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
     }
 
     public void initMenu() {
+        this.removeAll();
+        this.repaint();
+        this.revalidate();
         Usuario_Logado verifica = Main.privilegio;
         if (verifica instanceof Usuario) {
             menuUsuarioComum();
@@ -171,10 +174,11 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         if (verifica == null) {
             menuSemUsuario();
         }
+        this.repaint();
+        this.revalidate();
     }
 
     public void removerMenu() {
-        removeAll();
         consX = 1;
         lbTitulo.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
         lbTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

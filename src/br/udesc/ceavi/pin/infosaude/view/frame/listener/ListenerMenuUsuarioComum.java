@@ -1,6 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.view.frame.listener;
 
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCampanha;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameTelaInicial;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameVacina;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
 import java.awt.event.ActionEvent;
@@ -39,7 +40,7 @@ public class ListenerMenuUsuarioComum implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            JOptionPane.showMessageDialog(tela, "Tela Em Desenvolvimento");
+            tela.addPanel(new InternalFrameTelaInicial());
         }
     }
 

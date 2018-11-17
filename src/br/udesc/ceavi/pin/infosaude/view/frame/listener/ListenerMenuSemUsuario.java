@@ -3,6 +3,7 @@ package br.udesc.ceavi.pin.infosaude.view.frame.listener;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastroPessoa;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameInstituicao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameLogin;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameTelaInicial;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,19 +39,13 @@ public class ListenerMenuSemUsuario implements Listener {
 
     private class btnAction0Listener implements ActionListener {
 
-        public btnAction0Listener() {
-        }
-
         @Override
         public void actionPerformed(ActionEvent ae) {
-            JOptionPane.showMessageDialog(tela, "Tela Em Desenvovimento");
+            tela.addPanel(new InternalFrameTelaInicial());
         }
     }
 
     private class btnAction1Listener implements ActionListener {
-
-        public btnAction1Listener() {
-        }
 
         @Override
         public void actionPerformed(ActionEvent ae) {
@@ -60,9 +55,6 @@ public class ListenerMenuSemUsuario implements Listener {
 
     private class btnAction2Listener implements ActionListener {
 
-        public btnAction2Listener() {
-        }
-
         @Override
         public void actionPerformed(ActionEvent ae) {
             tela.addPanel(new InternalFrameCadastroPessoa());
@@ -71,9 +63,6 @@ public class ListenerMenuSemUsuario implements Listener {
 
     private class btnAction3Listener implements ActionListener {
 
-        public btnAction3Listener() {
-        }
-
         @Override
         public void actionPerformed(ActionEvent ae) {
             tela.addPanel(new InternalFrameInstituicao());
@@ -81,9 +70,6 @@ public class ListenerMenuSemUsuario implements Listener {
     }
 
     private class btnAction4Listener implements ActionListener {
-
-        public btnAction4Listener() {
-        }
 
         @Override
         public void actionPerformed(ActionEvent ae) {

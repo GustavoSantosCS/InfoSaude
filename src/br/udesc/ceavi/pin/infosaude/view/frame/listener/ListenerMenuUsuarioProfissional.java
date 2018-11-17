@@ -3,6 +3,7 @@ package br.udesc.ceavi.pin.infosaude.view.frame.listener;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
 import br.udesc.ceavi.pin.infosaude.view.component.FrameCadastroDeCampanha;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastroPessoa;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameTelaInicial;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameVacina;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
 import java.awt.event.ActionEvent;
@@ -42,9 +43,8 @@ public class ListenerMenuUsuarioProfissional implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            JOptionPane.showMessageDialog(tela, "Tela Em Desenvolvimento");
+            tela.addPanel(new InternalFrameTelaInicial());
         }
-
     }
 
     private class btn1AcitionListener implements ActionListener {
