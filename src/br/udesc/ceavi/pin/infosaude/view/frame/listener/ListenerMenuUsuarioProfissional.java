@@ -67,12 +67,8 @@ public class ListenerMenuUsuarioProfissional implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            try {
                 FrameCadastroDeCampanha frameCadastroDeCampanha = new FrameCadastroDeCampanha();
                 frameCadastroDeCampanha.setVisible(true);
-            } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
-                JOptionPane.showMessageDialog(tela, "Erro Inesperado");
-            }
         }
     }
 
