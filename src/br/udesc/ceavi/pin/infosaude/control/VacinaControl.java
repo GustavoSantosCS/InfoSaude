@@ -7,10 +7,12 @@ package br.udesc.ceavi.pin.infosaude.control;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
+import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,15 +22,48 @@ import java.util.List;
 public class VacinaControl {
     private final ConexaoPostgresJDBC conexao;
 
+    
+    
     public VacinaControl() throws ClassNotFoundException, SQLException {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-//    public List listaVacina(){
-////        List<Vacina> listaVacina = new ArrayList<>();
-//        
-//        return;
-//    }
+    public List obterVacina() throws SQLException{
+        List<Vacina> listaVacina = new ArrayList<>();
+        String sqlQuery =  "select v.id_vacina,v.nome_vacina from vacina as v";
+        PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+        stmt.execute();
+        ResultSet resultSet = stmt.getResultSet();
+        
+        while(resultSet.next()){
+            Vacina vacina = new Vacina();
+            vacina.setId(resultSet.getInt("id_vacina"));
+            vacina.setVacina(resultSet.getString("nome_vacina"));
+            
+            listaVacina.add(vacina);
+        }
+        return listaVacina;
+        
+    }
+    
+    public List obterPublicoAlvo(Long id_vacina) throws SQLException{
+        List<PublicoAlvo> listaPublicoAlvo = new ArrayList<>();
+        String sqlQuery =  "select pa.idade_max,pa.idade_min,pa.sexo from publico_alvo as pa natural inner join vacina ";
+        PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+        stmt.execute();
+        ResultSet resultSet = stmt.getResultSet();
+        
+        while(resultSet.next()){
+            PublicoAlvo publicoAlvo = new PublicoAlvo();
+            
+            publicoAlvo.setMinIdade(resultSet.getInt("idade_min"));
+            publicoAlvo.setMaxIdade(resultSet.getInt("idade_max"));
+            publicoAlvo.setSexo(Sexo.valueOf(resultSet.getString("sexo")));
+            
+            listaPublicoAlvo.add(publicoAlvo);
+        }
+        return listaPublicoAlvo;
+    }
     
     public Long inserir(Vacina vacina,PublicoAlvo publicoAlvo) throws SQLException,ClassNotFoundException{
         Long id = null;
