@@ -240,7 +240,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
+                        .addGap(30, 30, 30)
                         .addComponent(jLabel4)
                         .addGap(5, 5, 5)
                         .addComponent(tfSlogn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -270,7 +270,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCadastrar)
                     .addComponent(btnLimpar))
-                .addContainerGap())
+                .addGap(30, 30, 30))
         );
 
         GridBagLayout jpMenuLayout = (GridBagLayout) this.jpVacina.getLayout();
