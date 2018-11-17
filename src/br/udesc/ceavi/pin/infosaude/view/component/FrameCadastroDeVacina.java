@@ -1,5 +1,8 @@
 package br.udesc.ceavi.pin.infosaude.view.component;
 
+import br.udesc.ceavi.pin.infosaude.control.PublicoAlvoControl;
+import br.udesc.ceavi.pin.infosaude.control.VacinaControl;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
@@ -7,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -18,7 +22,7 @@ import javax.swing.SpinnerNumberModel;
 
 public class FrameCadastroDeVacina extends javax.swing.JFrame {
 
-    private List<PublicoAlvo> date;
+    private List<PublicoAlvo> datePublicoAlvo;
     private int aux = 0;
 
     public FrameCadastroDeVacina() {
@@ -27,7 +31,7 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
         this.jpVacina.setSize(d);
         this.jpVacina.setPreferredSize(d);
         this.jpVacina.setMaximumSize(new Dimension(d.getSize().width, 400));
-        date = new ArrayList<>();
+        datePublicoAlvo = new ArrayList<>();
     }
 
     public Sexo getSexo(int index) {
@@ -72,20 +76,20 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
             }
             if (sexo == 2) {
                 try {
-                    date.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(0)));
-                    date.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(1)));
+                    datePublicoAlvo.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(0)));
+                    datePublicoAlvo.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(1)));
                 } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
             } else {
                 try {
-                    date.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(sexo)));
+                    datePublicoAlvo.add(new PublicoAlvo(idadeMax, idadeMim, getSexo(sexo)));
                 } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
             }
         } while (ponteiro < jpVacina.getComponentCount());
-        return date;
+        return datePublicoAlvo;
     }
 
     public void addPublicoAlvo() {
@@ -204,6 +208,12 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(jLabel1, gridBagConstraints);
+
+        tfVacina_nome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfVacina_nomeActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -243,6 +253,11 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
         getContentPane().add(tfObservacoes, gridBagConstraints);
 
         btnLimpar.setText("Limpar Campos");
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -358,12 +373,48 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenosActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        date = new ArrayList<>();
-        date = getPublicoAlvos();
-        for (int i = 0; i < date.size(); i++) {
-            System.out.println(date.get(i).toString());
+        getPublicoAlvos();
+        long id_vacina = -1;
+        for (int i = 0; i < datePublicoAlvo.size(); i++) {
+            System.out.println(datePublicoAlvo.get(i).toString());
+        }
+        try {
+            VacinaControl controladorVacina = new VacinaControl();
+            try {
+                int dose = 0;
+                if (!tfNumDose.getText().equals("")) {
+                    dose = Integer.valueOf(tfNumDose.getText());
+                    if (controladorVacina.validarVacina(dose, tfVacina_nome.getText())) {
+                        id_vacina = controladorVacina.inserir(dose, tfVacina_nome.getText(), tfObservacoes.getText());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Numero De Dose Não Informado");
+                }
+            } catch (DadosVaziosExcepitions ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro na Coneção com Banco");
+        }
+        try {
+            PublicoAlvoControl controladorPublicoAlvo = new PublicoAlvoControl();
+            for (int i = 0; i < datePublicoAlvo.size(); i++) {
+                controladorPublicoAlvo.inserir(datePublicoAlvo.get(i), id_vacina);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro na Coneção com Banco");
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed
+
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        tfNumDose.setText("");
+        tfObservacoes.setText("");
+        tfVacina_nome.setName("");
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void tfVacina_nomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfVacina_nomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfVacina_nomeActionPerformed
 
     /**
      * @param args the command line arguments
