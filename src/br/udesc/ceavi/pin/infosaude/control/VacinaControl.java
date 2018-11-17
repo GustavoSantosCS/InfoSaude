@@ -48,8 +48,10 @@ public class VacinaControl {
     
     public List obterPublicoAlvo(Long id_vacina) throws SQLException{
         List<PublicoAlvo> listaPublicoAlvo = new ArrayList<>();
-        String sqlQuery =  "select pa.idade_max,pa.idade_min,pa.sexo from publico_alvo as pa natural inner join vacina ";
+        String sqlQuery =  "select pa.idade_max,pa.idade_min,pa.sexo from publico_alvo as pa natural inner join vacina where pa.id_vacina = ?";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+        stmt.setLong(1, id_vacina);
+        
         stmt.execute();
         ResultSet resultSet = stmt.getResultSet();
         
