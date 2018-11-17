@@ -39,6 +39,10 @@ public class Instituicao implements Usuario_Logado {
         this.campanhas = campanhas;
     }
 
+    public Instituicao(String cnpj, String nome, String senha, Endereco endereco) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public long getId() {
         return id;
     }

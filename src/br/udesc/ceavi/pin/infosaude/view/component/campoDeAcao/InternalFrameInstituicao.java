@@ -1,8 +1,17 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
+import br.udesc.ceavi.pin.infosaude.control.EnderecoControl;
+import br.udesc.ceavi.pin.infosaude.control.InstituicaoControl;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
+import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.modelo.Estado;
+import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
 import java.awt.Dimension;
+import java.sql.SQLException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -10,6 +19,12 @@ import java.util.Objects;
  */
 public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
 
+    private Endereco endereco;
+    private EnderecoControl enderecoControl;
+    private Instituicao instituicao;
+    private InstituicaoControl instituicaoControl;
+    
+    
     /**
      * Creates new form InternalFrameInstituicao
      */
@@ -81,7 +96,7 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jpBTN = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnCadastrar = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -304,18 +319,17 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         jpDadosDeAcessoLayout.setHorizontalGroup(
             jpDadosDeAcessoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpDadosDeAcessoLayout.createSequentialGroup()
-                .addContainerGap(42, Short.MAX_VALUE)
-                .addGroup(jpDadosDeAcessoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGap(27, 27, 27)
-                .addGroup(jpDadosDeAcessoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(tfSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(42, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpDadosDeAcessoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jpDadosDeAcessoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpDadosDeAcessoLayout.createSequentialGroup()
+                        .addGroup(jpDadosDeAcessoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGap(27, 27, 27)
+                        .addGroup(jpDadosDeAcessoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(tfSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpDadosDeAcessoLayout.setVerticalGroup(
@@ -346,8 +360,13 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         jButton4.setText("Cancelar");
         jpBTN.add(jButton4);
 
-        jButton5.setText("Cadastrar");
-        jpBTN.add(jButton5);
+        btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarActionPerformed(evt);
+            }
+        });
+        jpBTN.add(btnCadastrar);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -377,6 +396,43 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        // Endereco
+        String bairro = tfBairro.getText();
+        String cep = tfBairro.getText();
+        String cidade = tfBairro.getText();
+        String complemento = tfBairro.getText();
+        int numeroCasa = Integer.parseInt(tfNumero.getText());
+        String rua = tfBairro.getText();
+        Estado estado = (Estado) jComboBox1.getSelectedItem();
+        String email = tfBairro.getText();
+        String telefone = tfBairro.getText();
+        //Instituicao
+        String cnpj = tfCNPJ.getText();
+        String nome = tfNome.getText();
+        String senha = tfSenha.getText();
+        
+        endereco = new Endereco(bairro, cep, cidade, complemento, email, numeroCasa, rua, telefone, estado);
+        instituicao = new Instituicao(cnpj, nome, senha, endereco);
+        boolean b = false;
+        boolean a = false;
+        
+        try {
+            b = enderecoControl.validaCampos(bairro,cep,cidade,numeroCasa,rua);
+            a = instituicaoControl.validaCampos(cnpj,nome,senha);
+        } catch (DadosVaziosExcepitions ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        if (a == true && b == true) {
+            try {
+                enderecoControl.inserir(endereco);
+                instituicaoControl.inserir(instituicao, endereco);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(InternalFrameCadastroPessoa.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnCadastrarActionPerformed
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -404,7 +460,7 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         if (!Objects.equals(this.jButton4, other.jButton4)) {
             return false;
         }
-        if (!Objects.equals(this.jButton5, other.jButton5)) {
+        if (!Objects.equals(this.btnCadastrar, other.btnCadastrar)) {
             return false;
         }
         if (!Objects.equals(this.jComboBox1, other.jComboBox1)) {
@@ -496,10 +552,10 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnValidar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

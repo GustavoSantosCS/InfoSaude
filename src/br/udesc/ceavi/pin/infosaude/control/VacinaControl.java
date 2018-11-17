@@ -11,6 +11,7 @@ import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -23,6 +24,12 @@ public class VacinaControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
+//    public List listaVacina(){
+////        List<Vacina> listaVacina = new ArrayList<>();
+//        
+//        return;
+//    }
+    
     public Long inserir(Vacina vacina,PublicoAlvo publicoAlvo) throws SQLException,ClassNotFoundException{
         Long id = null;
         String sqlQuery = "insert into vacina(id_publico_alvo,dose,vacina,observacao) values(?,?,?,?)returning id_vacina";

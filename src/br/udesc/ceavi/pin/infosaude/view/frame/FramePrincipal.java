@@ -49,7 +49,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(lbBusca, new Dimension(26, 26));
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width, this);
         jpMenu.add(menu);
-        addPanel(new InternalFrameVacina());
+        addPanel(new InternalFrameTelaInicial());
     }
 
     public void addPanel(JInternalFrame frame) {

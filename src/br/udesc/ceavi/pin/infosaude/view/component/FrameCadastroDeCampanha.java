@@ -190,6 +190,11 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
 
         cbVacina.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbVacina.setSelectedIndex(-1);
+        cbVacina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbVacinaActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Slogan:*");
 
@@ -283,6 +288,10 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
     }//GEN-LAST:event_btnCadastrarActionPerformed
+
+    private void cbVacinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVacinaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbVacinaActionPerformed
 
     /**
      * @param args the command line arguments
