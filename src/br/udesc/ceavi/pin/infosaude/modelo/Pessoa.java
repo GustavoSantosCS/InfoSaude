@@ -25,6 +25,12 @@ public class Pessoa implements Usuario_Logado{
     private String senha;
     private Sexo sexo;
     private Endereco endereco;
+    
+    //Construtor
+    public Pessoa(long id,String nome) {    
+        this.id = id;
+        this.nome = nome;
+    }
 
     //Construtor
     public Pessoa() {

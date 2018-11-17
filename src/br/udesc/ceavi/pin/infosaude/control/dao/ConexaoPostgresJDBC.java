@@ -41,12 +41,10 @@ public class ConexaoPostgresJDBC {
             this.con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Infosaude?ApplicationName=Projeto-InfoSaude", properties);
             this.con.setAutoCommit(false);
             JOptionPane.showMessageDialog(null, "Conectado");
-
     }
 
     public Connection getConnection() {
         return this.con;
-
     }
 
     public void close() {

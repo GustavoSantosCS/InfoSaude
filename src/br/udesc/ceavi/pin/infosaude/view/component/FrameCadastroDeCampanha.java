@@ -2,8 +2,6 @@ package br.udesc.ceavi.pin.infosaude.view.component;
 
 import br.udesc.ceavi.pin.infosaude.control.CampanhaControl;
 import br.udesc.ceavi.pin.infosaude.control.VacinaControl;
-import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
-import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
 import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
@@ -19,8 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 

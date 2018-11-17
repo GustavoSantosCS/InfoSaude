@@ -1,6 +1,5 @@
 package br.udesc.ceavi.pin.infosaude.control;
 
-
 import br.udesc.ceavi.pin.infosaude.modelo.Pessoa;
 import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
@@ -23,15 +22,16 @@ public class PessoaControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public boolean validaCampoLogin(String login) throws SQLException, DadosVaziosExcepitions ,LoginJaRegistradoNaBaseDeDadosException{
+    public boolean validaCampoLogin(String login) throws SQLException, DadosVaziosExcepitions, LoginJaRegistradoNaBaseDeDadosException {
         boolean a = true;
         if (login.equals("")) {
             a = false;
             throw new DadosVaziosExcepitions("LOGIN INVALIDADO!");
         } else {
             String sql = "Select from pessoa(login) where login = '?' returning login;";
+            PreparedStatement stmt = null;
             try {
-                PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sql);
+                stmt = this.conexao.getConnection().prepareStatement(sql);
                 stmt.setString(1, login);
 
                 ResultSet rs = stmt.executeQuery();
@@ -41,12 +41,13 @@ public class PessoaControl {
                     throw new LoginJaRegistradoNaBaseDeDadosException();
                 }
                 this.conexao.commit();
-                this.conexao.close();
             } catch (SQLException error) {
                 this.conexao.rollback();
                 throw error;
+            } finally {
+                stmt.close();
+                this.conexao.close();
             }
-
             return a;
         }
 
@@ -78,13 +79,13 @@ public class PessoaControl {
         return a;
     }
 
-    
-    public Long inserir(Pessoa pessoa,Endereco endereco) throws SQLException,ClassNotFoundException{
+    public Long inserir(Pessoa pessoa, Endereco endereco) throws SQLException, ClassNotFoundException {
         Long id = null;
         String sqlQuery = "insert into pessoa(id_endereco,nome,login,senha,cpf,rg,numero_sus,data_nascimento,sexo) values(?,?,?,?,?,?,?,?)returning id_pessoa";
-        
+
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
             stmt.setLong(1, endereco.getId());
             stmt.setString(2, pessoa.getNome());
             stmt.setString(3, pessoa.getLogin());
@@ -95,27 +96,31 @@ public class PessoaControl {
             Date a = new Date(pessoa.getDataNascimento().getTime());
             stmt.setDate(8, a);
             stmt.setString(9, pessoa.getSexo().toString());
-            
+
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 id = rs.getLong("id_pessoa");
             }
-            
+
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();
             throw error;
+        } finally {
+            stmt.close();
+            this.conexao.close();
         }
-        
+
         return id;
     }
-    
-     public int Alterar(Pessoa pessoa) {
+
+    public int Alterar(Pessoa pessoa) throws SQLException {
         int linhasAlteradas = 0;
         String sql = "update pessoa set nome = ?, login = ?, senha = ?, cpf = ?, rg = ?, numero_sus = ?, data_nascimento = ?, sexo = ?";
 
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sql);
+            stmt = this.conexao.getConnection().prepareStatement(sql);
 
             stmt.setString(1, pessoa.getNome());
             stmt.setString(2, pessoa.getLogin());
@@ -128,8 +133,9 @@ public class PessoaControl {
 
             linhasAlteradas = stmt.executeUpdate();
             this.conexao.commit();
-        } catch (Exception error) {
-
+        } finally {
+            stmt.close();
+            this.conexao.close();
         }
         return linhasAlteradas;
     }

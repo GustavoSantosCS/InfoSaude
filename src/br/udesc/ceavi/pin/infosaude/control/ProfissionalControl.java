@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.udesc.ceavi.pin.infosaude.control;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
@@ -17,31 +12,36 @@ import java.sql.SQLException;
  * @author lucas
  */
 public class ProfissionalControl {
+
     private final ConexaoPostgresJDBC conexao;
 
     public ProfissionalControl() throws ClassNotFoundException, SQLException {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public Long inserir(Profissional profissional,Instituicao instituicao) throws SQLException,ClassNotFoundException{
+    public Long inserir(Profissional profissional, Instituicao instituicao) throws SQLException, ClassNotFoundException {
         Long id = null;
         String sqlQuery = "insert into profissional(id_instituicao) values(?)returning id_pessoa";
-        
+
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
             stmt.setLong(1, instituicao.getId());
-            
+
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 id = rs.getLong("id_pessoa");
             }
-            
+
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();
             throw error;
+        } finally {
+            stmt.close();
+            this.conexao.close();
         }
-        
+
         return id;
     }
 }

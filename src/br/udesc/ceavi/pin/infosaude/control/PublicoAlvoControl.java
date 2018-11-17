@@ -21,8 +21,9 @@ public class PublicoAlvoControl {
         Long id = null;
         String sqlQuery = "insert into publicoAlvo(id_vacina,min_idade,max_idade,sexo) values(?,?,?,?)returning id_publicoAlvo";
         
+            PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
             stmt.setLong(1, id_vacina);
             stmt.setInt(2, publicoAlvo.getMinIdade());
             stmt.setInt(3, publicoAlvo.getMaxIdade());
@@ -37,6 +38,9 @@ public class PublicoAlvoControl {
         } catch (SQLException error) {
             this.conexao.rollback();
             throw error;
+        } finally {
+            stmt.close();
+            this.conexao.close();
         }
         
         return id;

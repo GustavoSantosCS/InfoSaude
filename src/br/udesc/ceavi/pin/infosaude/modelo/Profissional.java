@@ -1,6 +1,5 @@
 package br.udesc.ceavi.pin.infosaude.modelo;
 
-
 /**
  * Esta Classe define os atributos do Profissional
  *
@@ -21,6 +20,12 @@ public class Profissional extends Pessoa {
         super();
     }
 
+    //Construtor
+    public Profissional(long id, String nome) {
+        super(id,nome);
+    }
+
+    //Construtor
     public Profissional(String nome) {
         super("", null, "", nome, "", "", "", Sexo.F, null);
     }

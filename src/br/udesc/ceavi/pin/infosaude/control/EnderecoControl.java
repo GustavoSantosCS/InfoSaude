@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.udesc.ceavi.pin.infosaude.control;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,8 +50,9 @@ public class EnderecoControl {
         Long id = null;
         String sqlQuery = "insert into endereco(bairro,cep,cidade,complemento,numero,rua,estado,email,telefone) values(?,?,?,?,?,?,?,?,?)returning id_endereco";
 
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
             stmt.setString(1, endereco.getBairro());
             stmt.setString(2, endereco.getCep());
             stmt.setString(3, endereco.getCidade());
@@ -77,8 +72,10 @@ public class EnderecoControl {
         } catch (SQLException error) {
             this.conexao.rollback();
             throw error;
+        } finally {
+            stmt.close();
+            this.conexao.close();
         }
-
         return id;
     }
 }

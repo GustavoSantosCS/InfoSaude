@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class Vacina {
 
-    private long id;
+    private long id_vacina;
     private Date dataAplicacao;
-    private float dose;
+    private int dose;
     private String vacina;
     private Profissional profissional;
     private List<PublicoAlvo> publicosAlvos;
@@ -29,9 +29,12 @@ public class Vacina {
     public Vacina() {
         super();
     }
+    public Vacina(long id_vacina) {
+        this.id_vacina = id_vacina;
+    }
 
     //Construtor
-    public Vacina(Date dataAplicacao, float dose, String vacina, Profissional profissional, List<PublicoAlvo> publicosAlvos) {
+    public Vacina(Date dataAplicacao, int dose, String vacina, Profissional profissional, List<PublicoAlvo> publicosAlvos) {
         super();
         this.dataAplicacao = dataAplicacao;
         this.dose = dose;
@@ -39,7 +42,7 @@ public class Vacina {
         this.profissional = profissional;
         this.publicosAlvos = publicosAlvos;
     }
-    public Vacina(float dose, String vacina,  List<PublicoAlvo> publicosAlvos) {
+    public Vacina(int dose, String vacina,  List<PublicoAlvo> publicosAlvos) {
         super();
         this.dataAplicacao = null;
         this.dose = dose;
@@ -48,7 +51,7 @@ public class Vacina {
         this.publicosAlvos = publicosAlvos;
     }
 
-    public Vacina(Date dataAplicacao, float dose, String vacina, Profissional profissional, PublicoAlvo publicosAlvos) {
+    public Vacina(Date dataAplicacao, int dose, String vacina, Profissional profissional, PublicoAlvo publicosAlvos) {
         super();
         this.dataAplicacao = dataAplicacao;
         this.dose = dose;
@@ -59,11 +62,11 @@ public class Vacina {
     }
 
     public long getId() {
-        return id;
+        return id_vacina;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.id_vacina = id;
     }
 
     public String getObservacao() {
@@ -82,11 +85,11 @@ public class Vacina {
         this.dataAplicacao = dataAplicacao;
     }
 
-    public float getDose() {
+    public int getDose() {
         return dose;
     }
 
-    public void setDose(float dose) {
+    public void setDose(int dose) {
         this.dose = dose;
     }
 
