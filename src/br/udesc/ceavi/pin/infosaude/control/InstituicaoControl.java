@@ -6,6 +6,7 @@
 package br.udesc.ceavi.pin.infosaude.control;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
 import java.sql.Date;
@@ -25,6 +26,25 @@ public class InstituicaoControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
+    public boolean validaCampos(String cnpj, String nome, String senha) throws DadosVaziosExcepitions {
+        boolean a = true;
+        
+        if(cnpj.equals("")){
+            a = false;
+            throw new DadosVaziosExcepitions("CNPJ INVALIDO!");
+        }
+        if(nome.equals("")){
+            a = false;
+            throw new DadosVaziosExcepitions("NOME INVALIDO!");
+        }
+        if(senha.equals("")){
+            a = false;
+            throw new DadosVaziosExcepitions("SENHA INVALIDO!");
+        }
+        
+        return a;
+    }
+    
     public Long inserir(Instituicao instituicao,Endereco endereco) throws SQLException,ClassNotFoundException{
         Long id = null;
         String sqlQuery = "insert into instituicao(id_endereco,cnpj,nome,senha) values(?,?,?,?)returning id_instituicao";

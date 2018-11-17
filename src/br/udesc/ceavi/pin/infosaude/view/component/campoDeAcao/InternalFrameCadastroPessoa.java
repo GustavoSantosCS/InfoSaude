@@ -1,14 +1,32 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
+import br.udesc.ceavi.pin.infosaude.control.EnderecoControl;
+import br.udesc.ceavi.pin.infosaude.control.PessoaControl;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.LoginJaRegistradoNaBaseDeDadosException;
+import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.modelo.Estado;
+import br.udesc.ceavi.pin.infosaude.modelo.Pessoa;
+import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import java.awt.Dimension;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author gusta
  */
 public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
+
+    private Endereco endereco;
+    private Pessoa pessoa;
+    private PessoaControl controladorPessoa;
+    private EnderecoControl enderecoControl;
+    private String loginValido;
 
     /**
      * Creates new form InternalFrameInstituicao
@@ -26,7 +44,7 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         jpEndereco.setPreferredSize(new Dimension(511, 300));
         jpDadosDeAcesso.setMinimumSize(new Dimension(511, 120));
         jpDadosDeAcesso.setPreferredSize(new Dimension(511, 120));
-        
+
         tfSenha.setPreferredSize(new Dimension(200, 27));
         tfUsuario.setPreferredSize(new Dimension(200, 27));
         tfCPF.setPreferredSize(new Dimension(60, 27));
@@ -42,15 +60,17 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         for (int i = 0; i < Estado.values().length; i++) {
             jComboBox1.addItem(Estado.values()[i].toString());
         }
-        
+
     }
 
     public String getjPanel1() {
         return jPanel1.getSize().toString();
     }
-    public String getRolagemSize(){
+
+    public String getRolagemSize() {
         return jScrollPane1.getSize().toString();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,10 +115,10 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         jLabel7 = new javax.swing.JLabel();
         tfUsuario = new javax.swing.JTextField();
         tfSenha = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        btnValidarLogin = new javax.swing.JButton();
         jpBTN = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnCadastrar = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         setTitle("Cadastro de Usuario");
@@ -390,12 +410,17 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jpDadosDeAcesso.add(tfSenha, gridBagConstraints);
 
-        jButton1.setText("Validar");
+        btnValidarLogin.setText("Validar");
+        btnValidarLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnValidarLoginActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
-        jpDadosDeAcesso.add(jButton1, gridBagConstraints);
+        jpDadosDeAcesso.add(btnValidarLogin, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -409,8 +434,13 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         jButton4.setText("Cancelar");
         jpBTN.add(jButton4);
 
-        jButton5.setText("Cadastrar");
-        jpBTN.add(jButton5);
+        btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarActionPerformed(evt);
+            }
+        });
+        jpBTN.add(btnCadastrar);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -440,6 +470,78 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void btnValidarLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarLoginActionPerformed
+        String login = tfUsuario.getText();
+        try {
+            controladorPessoa = new PessoaControl();
+            try {
+                if (controladorPessoa.validaCampoLogin(login));
+                loginValido = login;
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
+            } catch (DadosVaziosExcepitions | LoginJaRegistradoNaBaseDeDadosException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados1");
+        }
+    }//GEN-LAST:event_btnValidarLoginActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        //Endereco
+        String bairro = tfBairro.getText();
+        String cep = tfBairro.getText();
+        String cidade = tfBairro.getText();
+        String complemento = tfBairro.getText();
+        int numeroCasa = Integer.parseInt(tfNumero.getText());
+        String rua = tfBairro.getText();
+        Estado estado = (Estado) jComboBox1.getSelectedItem();
+        String email = tfBairro.getText();
+        String telefone = tfBairro.getText();
+        // Pessoa
+        String nome = tfNome.getText();
+        String cpf = tfCPF.getText();
+        String numeroSUS = tfSUS.getText();
+        String login = tfUsuario.getText();
+        String rg = "Precisa incerir";
+        String[] da = tfDataNascimento.getText().split("/");
+        Date data = new Date(Integer.getInteger(da[2]), Integer.getInteger(da[1]), Integer.getInteger(da[0]));
+        String senha = tfSenha.getText();
+        Sexo sexo = (Sexo) jCSexo.getSelectedItem();
+
+        endereco = new Endereco(bairro, cep, cidade, complemento, email, numeroCasa, rua, telefone, estado);
+        pessoa = new Pessoa(cpf, data, login, nome, numeroSUS, rg, senha, sexo, endereco);
+        boolean a = false;
+        boolean b = false;
+
+        try {
+            b = enderecoControl.validaCampos(bairro, cep, cidade, numeroCasa, rua);
+            a = controladorPessoa.validaCampos(cpf, login, nome, numeroSUS, rg, senha);
+        } catch (DadosVaziosExcepitions ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(InternalFrameCadastroPessoa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (a == true && b == true) {
+            try {
+                enderecoControl.inserir(endereco);
+                controladorPessoa.inserir(pessoa, endereco);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(InternalFrameCadastroPessoa.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if (!loginValido.equals(tfUsuario.getText())) {
+            JOptionPane.showMessageDialog(this, "Login Não Validado");
+        } else {
+            try {
+                controladorPessoa = new PessoaControl();
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
+            }
+        }
+    }//GEN-LAST:event_btnCadastrarActionPerformed
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -452,13 +554,13 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
             return false;
         }
         final InternalFrameCadastroPessoa other = (InternalFrameCadastroPessoa) obj;
-        if (!Objects.equals(this.jButton1, other.jButton1)) {
+        if (!Objects.equals(this.btnValidarLogin, other.btnValidarLogin)) {
             return false;
         }
         if (!Objects.equals(this.jButton4, other.jButton4)) {
             return false;
         }
-        if (!Objects.equals(this.jButton5, other.jButton5)) {
+        if (!Objects.equals(this.btnCadastrar, other.btnCadastrar)) {
             return false;
         }
         if (!Objects.equals(this.jCSexo, other.jCSexo)) {
@@ -571,9 +673,9 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnCadastrar;
+    private javax.swing.JButton btnValidarLogin;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jCSexo;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
