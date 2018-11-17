@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,6 +26,29 @@ public class CampanhaControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
+    public boolean validarCampos(String slogan, Date dataInicio, Date dataFim){
+        boolean a = true;
+        
+        if(slogan.equals("")){
+            a = false;
+            JOptionPane.showMessageDialog(null,"INSIRA UM SLOGAN PARA A CAMPANHA");
+        }
+        if(dataInicio.getDay() > dataFim.getDay()){
+            a = false;
+            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nDIA NÃO CONSISTE!");
+        }
+        if(dataInicio.getMonth()> dataFim.getMonth()){
+            a = false;
+            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nMÊS NÃO CONSISTE!");
+        }
+        if(dataInicio.getYear() > dataFim.getYear()){
+            a = false;
+            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nANO NÃO CONSISTE!");
+        }
+        
+        return a;
+    }
+    
     public Long inserir(Campanha campanha,Instituicao instituicao,Vacina vacina) throws SQLException,ClassNotFoundException{
         Long id = null;
         String sqlQuery = "insert into campanha(id_instituicao,id_vacina,data_inicio,data_fim) values(?,?,?,?)returning id_campanha";

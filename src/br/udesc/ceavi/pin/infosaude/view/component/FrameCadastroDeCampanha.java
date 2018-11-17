@@ -1,6 +1,10 @@
 package br.udesc.ceavi.pin.infosaude.view.component;
 
+import br.udesc.ceavi.pin.infosaude.control.CampanhaControl;
+import br.udesc.ceavi.pin.infosaude.control.VacinaControl;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
+import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
@@ -11,18 +15,24 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class FrameCadastroDeCampanha extends javax.swing.JFrame {
 
+    private CampanhaControl campanhaControl;
+    private Campanha campanha;
+    private VacinaControl vacinaControl;
     private int aux = 0;
     private List<Vacina> date;
 
-    public FrameCadastroDeCampanha() throws IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException {
+    public FrameCadastroDeCampanha() {
         initComponents();
         Dimension d = new Dimension(300, 275);
         this.jpVacina.setSize(d);
@@ -30,13 +40,16 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
         this.jpVacina.setMaximumSize(new Dimension(d.getSize().width, 400));
         date = new ArrayList<>();
         List<PublicoAlvo> listP = new ArrayList<>();
-        listP.add(new PublicoAlvo(50, 30, Sexo.M));
-        listP.add(new PublicoAlvo(50, 30, Sexo.F));
-        listP.add(new PublicoAlvo(15, 10, Sexo.F));
-        listP.add(new PublicoAlvo(15, 10, Sexo.F));
-        date.add(new Vacina(1, "Tetano", listP));
-        date.add(new Vacina(1, "HPV", listP));
-        date.add(new Vacina(2, "Gripe Suina", listP));
+        try {
+            vacinaControl = new VacinaControl();
+            date = vacinaControl.obterVacina();
+            for (int i = 0; i < date.size(); i++) {
+                date.get(i).setPublicosAlvos(vacinaControl.obterPublicoAlvo(date.get(i).getId()));
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Erro no Sistema! erro ao comunicar com o Banco de Dados");
+        }
+
         listaVacina();
     }
 
@@ -57,7 +70,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
     private void actionListenerComboBoxVacina(ActionEvent evt) {
         jpVacina.removeAll();
         aux = -1;
-        List<PublicoAlvo> publico = date.get(cbVacina.getSelectedIndex()-1).getPublicosAlvos();
+        List<PublicoAlvo> publico = date.get(cbVacina.getSelectedIndex() - 1).getPublicosAlvos();
         System.out.println(publico.size());
         for (int i = 0; i < publico.size(); i++) {
             addPublicoAlvo(publico.get(i));
@@ -66,7 +79,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
 
     //Alimenta o com
     public void addPublicoAlvo(PublicoAlvo p) {
-       
+
         GridBagConstraints cons;
         aux++;
 
@@ -286,7 +299,46 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+     public boolean validarCampos(String slogan, Date dataInicio, Date dataFim){
+        boolean a = true;
+        
+        if(slogan.equals("")){
+            a = false;
+            JOptionPane.showMessageDialog(null,"INSIRA UM SLOGAN PARA A CAMPANHA");
+        }
+        if(dataInicio.getDay() > dataFim.getDay()){
+            a = false;
+            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nDIA NÃO CONSISTE!");
+        }
+        if(dataInicio.getMonth()> dataFim.getMonth()){
+            a = false;
+            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nMÊS NÃO CONSISTE!");
+        }
+        if(dataInicio.getYear() > dataFim.getYear()){
+            a = false;
+            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nANO NÃO CONSISTE!");
+        }
+        
+        return a;
+    }
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        String slogan = tfSlogn.getText();
+        String[] da = tfDataInicio.getText().split("/");
+        Date dataInicio = new Date(Integer.getInteger(da[2]), Integer.getInteger(da[1]), Integer.getInteger(da[0]));
+        da = tfDataFim.getText().split("/");
+        Date dataFim = new Date(Integer.getInteger(da[2]),Integer.getInteger(da[1]),Integer.getInteger(da[0]));
+        Vacina vacina = date.get(cbVacina.getSelectedIndex());
+        
+        campanha = new Campanha(slogan, vacina, dataInicio, dataFim);
+        boolean a = validarCampos(slogan, dataInicio, dataFim);
+        
+        
+        if(a == false){
+            JOptionPane.showMessageDialog(null, "DADOS INVALIDOS");
+        }else{
+//            campanhaControl.inserir(campanha, instituicao, vacina);
+        }
+        
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void cbVacinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVacinaActionPerformed
@@ -324,11 +376,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new FrameCadastroDeCampanha().setVisible(true);
-                } catch (IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException ex) {
-                    Logger.getLogger(FrameCadastroDeCampanha.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new FrameCadastroDeCampanha().setVisible(true);
             }
         });
     }
