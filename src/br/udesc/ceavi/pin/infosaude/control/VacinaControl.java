@@ -25,7 +25,7 @@ public class VacinaControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public List obterVacina() throws SQLException {
+    public List<Vacina> obterVacina() throws SQLException {
         List<Vacina> listaVacina = new ArrayList<>();
         String sqlQuery = "select v.id_vacina,v.nome_vacina from vacina as v";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
@@ -42,7 +42,7 @@ public class VacinaControl {
         return listaVacina;
     }
 
-    public List obterPublicoAlvo(Long id_vacina) throws SQLException {
+    public List<PublicoAlvo> obterPublicoAlvo(Long id_vacina) throws SQLException {
         List<PublicoAlvo> listaPublicoAlvo = new ArrayList<>();
         String sqlQuery = "select pa.idade_max,pa.idade_min,pa.sexo from publico_alvo as pa natural inner join vacina where pa.id_vacina = ?";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
@@ -70,7 +70,7 @@ public class VacinaControl {
         String sqlQueryComObs = "insert into vacina(dose,vacina,observacao) values(?,?,?)returning id_vacina";
         String sqlQuerySemObs = "insert into vacina(dose,vacina) values(?,?)returning id_vacina";
 
-            PreparedStatement stmt = null;
+        PreparedStatement stmt = null;
         try {
             if (!obs.equals("")) {
                 stmt = this.conexao.getConnection().prepareStatement(sqlQueryComObs);
@@ -108,7 +108,8 @@ public class VacinaControl {
         return true;
     }
 
-    public List getVacinaUsuario() throws SQLException {
+    //Obtem as Vacinas aplicadas no usuario
+    public List<Vacina> getVacinaUsuario() throws SQLException {
         List<Vacina> listaDeVacina = new ArrayList();
         String sqlQuery1 = "select v.id_vacina, v.nome_vacina,c.dose_aplicada,c.observacoes,c.id_profissional, p.nome_pessoa as profissional"
                 + "from vacina as v natural inner join carterinha as c natura inner join pessoa as p"

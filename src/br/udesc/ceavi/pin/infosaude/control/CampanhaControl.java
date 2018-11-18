@@ -76,7 +76,8 @@ public class CampanhaControl {
         return id;
     }
 
-    public List getCampanhaUsuario() throws SQLException {
+    //Obtem as campanhas participada pelo usuario
+    public List<Campanha>  getCampanhaUsuario() throws SQLException {
         List<Campanha> listaDeCampanha = new ArrayList();
         String sqlQuery1 = "select c.id_campanha,c.slogam,c.id_vacina,c.data_inicio,c.data_fin"
                 + "from carterinha natural inner join campanha"

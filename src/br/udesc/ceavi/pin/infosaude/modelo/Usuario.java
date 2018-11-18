@@ -1,6 +1,6 @@
 package br.udesc.ceavi.pin.infosaude.modelo;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * Esta Classe define os atributos do Usuario
@@ -15,25 +15,32 @@ import java.util.List;
  */
 public class Usuario extends Pessoa {
 
-    private List<Vacina> listaVacina;
+    private Carterinha carterinha;
 
+    //Construtor
+    public Usuario(Carterinha carterinha) {
+        this.carterinha = carterinha;
+    }
+
+    //Construtor
+    public Usuario(Carterinha carterinha, long id, String nome) {
+        super(id, nome);
+        this.carterinha = carterinha;
+    }
+
+    //Construtor
+    public Usuario(Carterinha carterinha, String cpf, Date dataNascimento, String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
+        super(cpf, dataNascimento, login, nome, numeroSUS, registroGeral, senha, sexo, endereco);
+        this.carterinha = carterinha;
+    }
+    
     //Construtor
     public Usuario() {
         super();
     }
 
-    //Construtor
-    public Usuario(List<Vacina> listaVacina) {
-        super();
-        this.listaVacina = listaVacina;
-    }
-
-    public List<Vacina> getListaVacina() {
-        return listaVacina;
-    }
-
-    public void setListaVacina(List<Vacina> listaVacina) {
-        this.listaVacina = listaVacina;
+    public Carterinha getCarterinha() {
+        return carterinha;
     }
 
 }

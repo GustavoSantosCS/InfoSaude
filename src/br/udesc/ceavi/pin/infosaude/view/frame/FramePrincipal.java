@@ -1,6 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
+import br.udesc.ceavi.pin.infosaude.modelo.Carterinha;
 import br.udesc.ceavi.pin.infosaude.principal.Main;
 import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
@@ -24,7 +25,6 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private MenuJPaneUniversao menu;
 
-//    Connection con = null;
     ConexaoPostgresJDBC conJDBC;
 
     /**
@@ -49,7 +49,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(lbBusca, new Dimension(26, 26));
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width, this);
         jpMenu.add(menu);
-        addPanel(new InternalFrameTelaInicial());
+        addPanel(new InternalFrameLancamentoDeVacina());
     }
 
     public boolean addPanel(JInternalFrame frame) {
