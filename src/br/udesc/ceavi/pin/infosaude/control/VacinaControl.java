@@ -25,7 +25,8 @@ public class VacinaControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public List<Vacina> obterVacina() throws SQLException {
+    //Obter vacina cadastrar em banco
+    public List<Vacina> getVacinas() throws SQLException {
         List<Vacina> listaVacina = new ArrayList<>();
         String sqlQuery = "select v.id_vacina,v.nome_vacina from vacina as v";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
@@ -33,15 +34,14 @@ public class VacinaControl {
         ResultSet resultSet = stmt.getResultSet();
 
         while (resultSet.next()) {
-            Vacina vacina = new Vacina();
-            vacina.setId(resultSet.getInt("id_vacina"));
-            vacina.setVacina(resultSet.getString("nome_vacina"));
-
+            Vacina vacina = new Vacina(resultSet.getLong("id_vacina"),
+                    resultSet.getInt("num_doses"), resultSet.getString("nome_vacina"), resultSet.getString("observacao"));
             listaVacina.add(vacina);
         }
         return listaVacina;
     }
 
+    //Obter publico alvo de vacina
     public List<PublicoAlvo> obterPublicoAlvo(Long id_vacina) throws SQLException {
         List<PublicoAlvo> listaPublicoAlvo = new ArrayList<>();
         String sqlQuery = "select pa.idade_max,pa.idade_min,pa.sexo from publico_alvo as pa natural inner join vacina where pa.id_vacina = ?";
@@ -65,6 +65,7 @@ public class VacinaControl {
         return listaPublicoAlvo;
     }
 
+    //Inserir vacina
     public Long inserir(int doses, String nome, String obs) throws SQLException, ClassNotFoundException {
         Long id = null;
         String sqlQueryComObs = "insert into vacina(dose,vacina,observacao) values(?,?,?)returning id_vacina";
@@ -98,6 +99,7 @@ public class VacinaControl {
         return id;
     }
 
+    //Validar dados de vacina
     public boolean validarVacina(int numeroDoses, String nomeVacina) throws DadosVaziosExcepitions {
         if (numeroDoses < 1) {
             throw new DadosVaziosExcepitions("Numero de Dose Incompativel");
@@ -136,5 +138,16 @@ public class VacinaControl {
     public Long aplicarVacina(Vacina vacina) throws SQLException, ClassNotFoundException {
         Long id = null;
         return id;
+    }
+
+    //Obter Numero de pessoa condizentes com o publico alvo informado
+    public int getNumeroPessoaCondizentesComOPublicoAlvo(PublicoAlvo publico_alvo) {
+
+        return -1;
+    }
+
+    public int getNumPessoaQueAplicaramVacinaPerantePublicoAlvo(PublicoAlvo publico_alvo, long id_vacina) {
+        
+        return -1;
     }
 }

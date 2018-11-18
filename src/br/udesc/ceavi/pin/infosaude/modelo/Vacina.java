@@ -20,7 +20,7 @@ public class Vacina {
     private long id_vacina;
     private Date dataAplicacao;
     private int dose;
-    private String vacina;
+    private String nome_vacina;
     private Profissional profissional;
     private List<PublicoAlvo> publicosAlvos;
     private String observacao;
@@ -38,7 +38,7 @@ public class Vacina {
         super();
         this.dataAplicacao = dataAplicacao;
         this.dose = dose;
-        this.vacina = vacina;
+        this.nome_vacina = vacina;
         this.profissional = profissional;
         this.publicosAlvos = publicosAlvos;
     }
@@ -46,7 +46,7 @@ public class Vacina {
         super();
         this.dataAplicacao = null;
         this.dose = dose;
-        this.vacina = vacina;
+        this.nome_vacina = vacina;
         this.profissional = null;
         this.publicosAlvos = publicosAlvos;
     }
@@ -55,10 +55,20 @@ public class Vacina {
         super();
         this.dataAplicacao = dataAplicacao;
         this.dose = dose;
-        this.vacina = vacina;
+        this.nome_vacina = vacina;
         this.profissional = profissional;
         this.publicosAlvos = new ArrayList<>();
         this.publicosAlvos.add(publicosAlvos);
+    }
+
+    public Vacina(long id_vacina,int num_dose, String nome_vacina, String observacoes) {
+        super();
+        this.id_vacina = id_vacina;
+        this.dose = num_dose;
+        this.nome_vacina = nome_vacina;
+        this.observacao = observacoes;
+        this.profissional = null;
+        this.publicosAlvos = null;
     }
 
     public long getId() {
@@ -94,11 +104,11 @@ public class Vacina {
     }
 
     public String getVacina() {
-        return vacina;
+        return nome_vacina;
     }
 
     public void setVacina(String vacina) {
-        this.vacina = vacina;
+        this.nome_vacina = vacina;
     }
 
     public Profissional getProfissional() {
@@ -115,6 +125,11 @@ public class Vacina {
 
     public void setPublicosAlvos(List<PublicoAlvo> publicosAlvos) {
         this.publicosAlvos = publicosAlvos;
+    }
+
+    @Override
+    public String toString() {
+        return nome_vacina;
     }
 
 }

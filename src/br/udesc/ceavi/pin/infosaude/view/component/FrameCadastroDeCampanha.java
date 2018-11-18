@@ -38,7 +38,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
         List<PublicoAlvo> listP = new ArrayList<>();
         try {
             vacinaControl = new VacinaControl();
-            date = vacinaControl.obterVacina();
+            date = vacinaControl.getVacinas();
             for (int i = 0; i < date.size(); i++) {
                 date.get(i).setPublicosAlvos(vacinaControl.obterPublicoAlvo(date.get(i).getId()));
             }

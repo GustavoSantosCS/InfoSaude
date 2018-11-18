@@ -77,7 +77,7 @@ public class CampanhaControl {
     }
 
     //Obtem as campanhas participada pelo usuario
-    public List<Campanha>  getCampanhaUsuario() throws SQLException {
+    public List<Campanha> getCampanhaUsuario() throws SQLException {
         List<Campanha> listaDeCampanha = new ArrayList();
         String sqlQuery1 = "select c.id_campanha,c.slogam,c.id_vacina,c.data_inicio,c.data_fin"
                 + "from carterinha natural inner join campanha"
@@ -96,6 +96,31 @@ public class CampanhaControl {
             campanha.setDataInicio(new Date(resultSet.getShort(resultSet.getString("data_inicio"))));
             listaDeCampanha.add(campanha);
         }
+        stmt.close();
+        this.conexao.close();
+        return listaDeCampanha;
+    }
+
+    //Obtem todas as campanha
+    public List<Campanha> getCampanhas() throws SQLException {
+        List<Campanha> listaDeCampanha = new ArrayList();
+        String sqlQuery = "select * from campanha natural inner join vacina";
+        PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+        stmt.execute();
+        ResultSet resultSet = stmt.getResultSet();
+
+        while (resultSet.next()) {
+            Campanha campanha = new Campanha();
+            campanha.setId(resultSet.getLong("id_campanha"));
+            campanha.setSlogan(resultSet.getString("slogam"));
+            Vacina vacina = new Vacina(resultSet.getLong("id_vacina"), 
+                    resultSet.getInt("num_doses") , resultSet.getString("nome_vacina"),resultSet.getString("observacao"));
+            campanha.setVacina(vacina);
+            campanha.setDataFim(new Date(resultSet.getShort(resultSet.getString("data_fim"))));
+            campanha.setDataInicio(new Date(resultSet.getShort(resultSet.getString("data_inicio"))));
+            listaDeCampanha.add(campanha);
+        }
+        
         stmt.close();
         this.conexao.close();
         return listaDeCampanha;

@@ -73,5 +73,10 @@ public class Campanha {
     public void setDataInicio(Date dataInicio) {
         this.dataInicio = dataInicio;
     }
-    
+
+    @Override
+    public String toString() {
+        return slogan;
+    }
+
 }
