@@ -7,6 +7,7 @@ import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -41,20 +42,19 @@ public class InstituicaoControl {
 
     public Long inserir(Instituicao instituicao, Endereco endereco) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into instituicao(id_endereco,cnpj,nome,senha) values(?,?,?,?)returning id_instituicao";
+        String sqlQuery = "insert into instituicao(id_endereco,cnpj,nome,senha) values(?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
-            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, endereco.getId());
             stmt.setString(2, instituicao.getCnpj());
             stmt.setString(3, instituicao.getNome());
             stmt.setString(4, instituicao.getSenha());
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                id = rs.getLong("id_instituicao");
-            }
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            id = rs.getLong(1);
 
             this.conexao.commit();
         } catch (SQLException error) {

@@ -6,6 +6,7 @@ import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -48,26 +49,27 @@ public class EnderecoControl {
 
     public Long inserir(Endereco endereco) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into endereco(bairro,cep,cidade,complemento,numero,rua,estado,email,telefone) values(?,?,?,?,?,?,?,?,?)returning id_endereco";
+        String sqlQuery = "insert into endereco(bairro,cep,cidade,complemento,numero,rua,estado,email,telefone) values(?,?,?,?,?,?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
-            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, endereco.getBairro());
             stmt.setString(2, endereco.getCep());
             stmt.setString(3, endereco.getCidade());
             stmt.setString(4, endereco.getComplemento());
             stmt.setInt(5, endereco.getNumero());
             stmt.setString(6, endereco.getRua());
-            stmt.setString(7, endereco.getEstado().toString());
-            stmt.setString(8, endereco.getEmail());
-            stmt.setString(9, endereco.getTelefone());
-
-            ResultSet rs = stmt.executeQuery();
+            String e = endereco.getEstado().toString();
+            e = e.replaceAll(" ", "_");
+            stmt.setString(7, e.toUpperCase());
+            stmt.setString(8, "GustavoSantosixi@gmail.com");
+            stmt.setString(9, "47 991518293");
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                id = rs.getLong("id_endereco");
+                endereco.setId(rs.getLong(1));
             }
-
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();

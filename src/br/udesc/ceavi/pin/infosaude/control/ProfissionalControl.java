@@ -6,6 +6,7 @@ import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -21,14 +22,15 @@ public class ProfissionalControl {
 
     public Long inserir(Profissional profissional, Instituicao instituicao) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into profissional(id_instituicao) values(?)returning id_pessoa";
+        String sqlQuery = "insert into profissional(id_instituicao) values(?)";
 
         PreparedStatement stmt = null;
         try {
-            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, instituicao.getId());
 
-            ResultSet rs = stmt.executeQuery();
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 id = rs.getLong("id_pessoa");
             }

@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -50,21 +51,19 @@ public class CampanhaControl {
 
     public Long inserir(Campanha campanha, Instituicao instituicao, Vacina vacina) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into campanha(id_instituicao,id_vacina,data_inicio,data_fim) values(?,?,?,?)returning id_campanha";
+        String sqlQuery = "insert into campanha(id_instituicao,id_vacina,data_inicio,data_fim) values(?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
-            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, (int) instituicao.getId());
             stmt.setInt(2, (int) vacina.getId());
             stmt.setDate(3, (Date) campanha.getDataInicio());
             stmt.setDate(4, (Date) campanha.getDataFim());
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                id = rs.getLong("id_campanha");
-            }
-
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            id = rs.getLong(1);
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();
@@ -113,14 +112,14 @@ public class CampanhaControl {
             Campanha campanha = new Campanha();
             campanha.setId(resultSet.getLong("id_campanha"));
             campanha.setSlogan(resultSet.getString("slogam"));
-            Vacina vacina = new Vacina(resultSet.getLong("id_vacina"), 
-                    resultSet.getInt("num_doses") , resultSet.getString("nome_vacina"),resultSet.getString("observacao"));
+            Vacina vacina = new Vacina(resultSet.getLong("id_vacina"),
+                    resultSet.getInt("num_doses"), resultSet.getString("nome_vacina"), resultSet.getString("observacao"));
             campanha.setVacina(vacina);
             campanha.setDataFim(new Date(resultSet.getShort(resultSet.getString("data_fim"))));
             campanha.setDataInicio(new Date(resultSet.getShort(resultSet.getString("data_inicio"))));
             listaDeCampanha.add(campanha);
         }
-        
+
         stmt.close();
         this.conexao.close();
         return listaDeCampanha;

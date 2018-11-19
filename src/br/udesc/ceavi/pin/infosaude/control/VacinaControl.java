@@ -10,6 +10,7 @@ import br.udesc.ceavi.pin.infosaude.principal.Main;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,13 +69,13 @@ public class VacinaControl {
     //Inserir vacina
     public Long inserir(int doses, String nome, String obs) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQueryComObs = "insert into vacina(dose,vacina,observacao) values(?,?,?)returning id_vacina";
-        String sqlQuerySemObs = "insert into vacina(dose,vacina) values(?,?)returning id_vacina";
+        String sqlQueryComObs = "insert into vacina(dose,vacina,observacao) values(?,?,?)";
+        String sqlQuerySemObs = "insert into vacina(dose,vacina) values(?,?)";
 
         PreparedStatement stmt = null;
         try {
             if (!obs.equals("")) {
-                stmt = this.conexao.getConnection().prepareStatement(sqlQueryComObs);
+                stmt = this.conexao.getConnection().prepareStatement(sqlQueryComObs, Statement.RETURN_GENERATED_KEYS);
                 stmt.setInt(1, doses);
                 stmt.setString(2, nome);
                 stmt.setString(3, obs);
@@ -83,11 +84,9 @@ public class VacinaControl {
                 stmt.setInt(1, doses);
                 stmt.setString(2, nome);
             }
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                id = rs.getLong("id_vacina");
-            }
-
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            id = rs.getLong(1);
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();
@@ -147,7 +146,7 @@ public class VacinaControl {
     }
 
     public int getNumPessoaQueAplicaramVacinaPerantePublicoAlvo(PublicoAlvo publico_alvo, long id_vacina) {
-        
+
         return -1;
     }
 }

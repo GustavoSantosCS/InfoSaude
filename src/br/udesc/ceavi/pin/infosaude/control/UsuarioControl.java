@@ -5,6 +5,7 @@ import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -20,16 +21,15 @@ public class UsuarioControl {
 
     public Long inserir(Usuario usuario) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into usuario() values()returning id_pessoa";
+        String sqlQuery = "insert into usuario() values()";
 
         PreparedStatement stmt = null;
         try {
-            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                id = rs.getLong("id_pessoa");
-            }
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            id = rs.getLong("id_pessoa");
 
             this.conexao.commit();
         } catch (SQLException error) {

@@ -11,7 +11,6 @@ import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -25,7 +24,7 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
     private Endereco endereco;
     private Pessoa pessoa;
     private PessoaControl controladorPessoa;
-    private EnderecoControl enderecoControl;
+    private EnderecoControl controladorEndereco;
     private String loginValido;
 
     /**
@@ -119,6 +118,7 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         jpBTN = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         setTitle("Cadastro de Usuario");
@@ -431,16 +431,33 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 35, 5, 35);
         jPanel1.add(jpDadosDeAcesso, gridBagConstraints);
 
+        jpBTN.setLayout(new java.awt.GridBagLayout());
+
         jButton4.setText("Cancelar");
-        jpBTN.add(jButton4);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        jpBTN.add(jButton4, gridBagConstraints);
 
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.setEnabled(false);
         btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCadastrarActionPerformed(evt);
             }
         });
-        jpBTN.add(btnCadastrar);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        jpBTN.add(btnCadastrar, gridBagConstraints);
+
+        jLabel15.setText("Para que a opção Cadastrar Seja Liberada Valide o Login");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jpBTN.add(jLabel15, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -475,14 +492,19 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         try {
             controladorPessoa = new PessoaControl();
             try {
-                if (controladorPessoa.validaCampoLogin(login));
-                loginValido = login;
+                if (controladorPessoa.validaCampoLogin(login)) {
+                    loginValido = login;
+                    btnCadastrar.setEnabled(true);
+                }
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
             } catch (DadosVaziosExcepitions | LoginJaRegistradoNaBaseDeDadosException ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados1");
         }
     }//GEN-LAST:event_btnValidarLoginActionPerformed
@@ -493,9 +515,14 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         String cep = tfBairro.getText();
         String cidade = tfBairro.getText();
         String complemento = tfBairro.getText();
+        if (tfNumero.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Numero Em Endereço Não Informado");
+            return;
+        }
         int numeroCasa = Integer.parseInt(tfNumero.getText());
         String rua = tfBairro.getText();
-        Estado estado = (Estado) jComboBox1.getSelectedItem();
+        Estado estado;
+        estado = Estado.values()[jComboBox1.getSelectedIndex()];
         String email = tfBairro.getText();
         String telefone = tfBairro.getText();
         // Pessoa
@@ -504,172 +531,56 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
         String numeroSUS = tfSUS.getText();
         String login = tfUsuario.getText();
         String rg = "Precisa incerir";
+        if (tfDataNascimento.getText().equals("") || tfDataNascimento.getText().length() != 10 || tfDataNascimento.getText().charAt(2) != '/' ||  tfDataNascimento.getText().charAt(5) != '/') {
+            JOptionPane.showMessageDialog(this, "Data de Nascimento informada de Forma Incoreta");
+            return;
+        }
         String[] da = tfDataNascimento.getText().split("/");
-        Date data = new Date(Integer.getInteger(da[2]), Integer.getInteger(da[1]), Integer.getInteger(da[0]));
+        Date data = new Date(Integer.parseInt(da[2]), Integer.parseInt(da[1]), Integer.parseInt(da[0]));
+        System.out.println(Integer.parseInt(da[0]));
+        System.out.println(data.getDate());
+        System.out.println(Integer.parseInt(da[1]));
+        System.out.println(data.getMonth());
+        System.out.println(Integer.parseInt(da[2]));
+        System.out.println(data.getYear());
         String senha = tfSenha.getText();
-        Sexo sexo = (Sexo) jCSexo.getSelectedItem();
+        Sexo sexo = Sexo.values()[jCSexo.getSelectedIndex()];
 
         endereco = new Endereco(bairro, cep, cidade, complemento, email, numeroCasa, rua, telefone, estado);
         pessoa = new Pessoa(cpf, data, login, nome, numeroSUS, rg, senha, sexo, endereco);
         boolean a = false;
         boolean b = false;
-
-        try {
-            b = enderecoControl.validaCampos(bairro, cep, cidade, numeroCasa, rua);
-            a = controladorPessoa.validaCampos(cpf, login, nome, numeroSUS, rg, senha);
-        } catch (DadosVaziosExcepitions ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        } catch (SQLException ex) {
-            Logger.getLogger(InternalFrameCadastroPessoa.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (a == true && b == true) {
-            try {
-                enderecoControl.inserir(endereco);
-                controladorPessoa.inserir(pessoa, endereco);
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(InternalFrameCadastroPessoa.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
         if (!loginValido.equals(tfUsuario.getText())) {
             JOptionPane.showMessageDialog(this, "Login Não Validado");
-        } else {
+            return;
+        }
+        try {
+            controladorEndereco = new EnderecoControl();
             try {
-                controladorPessoa = new PessoaControl();
-            } catch (ClassNotFoundException | SQLException ex) {
+                b = controladorEndereco.validaCampos(bairro, cep, cidade, numeroCasa, rua);
+                a = controladorPessoa.validaCampos(cpf, login, nome, numeroSUS, rg, senha);
+            } catch (DadosVaziosExcepitions ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
             }
-        }
-    }//GEN-LAST:event_btnCadastrarActionPerformed
+            if (a == true && b == true) {
+                try {
+                    controladorEndereco.inserir(endereco);
+                    controladorPessoa = new PessoaControl();
+                    controladorPessoa.inserir(pessoa, endereco);
+                } catch (ClassNotFoundException | SQLException ex) {
+                    Logger.getLogger(InternalFrameCadastroPessoa.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final InternalFrameCadastroPessoa other = (InternalFrameCadastroPessoa) obj;
-        if (!Objects.equals(this.btnValidarLogin, other.btnValidarLogin)) {
-            return false;
-        }
-        if (!Objects.equals(this.jButton4, other.jButton4)) {
-            return false;
-        }
-        if (!Objects.equals(this.btnCadastrar, other.btnCadastrar)) {
-            return false;
-        }
-        if (!Objects.equals(this.jCSexo, other.jCSexo)) {
-            return false;
-        }
-        if (!Objects.equals(this.jComboBox1, other.jComboBox1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel1, other.jLabel1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel10, other.jLabel10)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel11, other.jLabel11)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel12, other.jLabel12)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel13, other.jLabel13)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel14, other.jLabel14)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel2, other.jLabel2)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel3, other.jLabel3)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel4, other.jLabel4)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel5, other.jLabel5)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel6, other.jLabel6)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel7, other.jLabel7)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel8, other.jLabel8)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel9, other.jLabel9)) {
-            return false;
-        }
-        if (!Objects.equals(this.jPanel1, other.jPanel1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jScrollPane1, other.jScrollPane1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpBTN, other.jpBTN)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpDadosDeAcesso, other.jpDadosDeAcesso)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpDadosPessoais, other.jpDadosPessoais)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpDadosSus, other.jpDadosSus)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpEndereco, other.jpEndereco)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfBairro, other.tfBairro)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfCEP, other.tfCEP)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfCPF, other.tfCPF)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfCidade, other.tfCidade)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfComplemento, other.tfComplemento)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfDataNascimento, other.tfDataNascimento)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfNome, other.tfNome)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfNumero, other.tfNumero)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfRua, other.tfRua)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfSUS, other.tfSUS)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfSenha, other.tfSenha)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfUsuario, other.tfUsuario)) {
-            return false;
-        }
-        return true;
-    }
+
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -684,6 +595,7 @@ public class InternalFrameCadastroPessoa extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -28,17 +29,19 @@ public class PessoaControl {
             a = false;
             throw new DadosVaziosExcepitions("LOGIN INVALIDADO!");
         } else {
-            String sql = "Select from pessoa(login) where login = '?' returning login;";
+            String sql = "Select login from pessoa where login = ?";
             PreparedStatement stmt = null;
             try {
                 stmt = this.conexao.getConnection().prepareStatement(sql);
                 stmt.setString(1, login);
 
                 ResultSet rs = stmt.executeQuery();
-                String rsLogin = rs.getString("login");
-                if (login.equals(rsLogin)) {
-                    a = false;
-                    throw new LoginJaRegistradoNaBaseDeDadosException();
+                if (rs.next()) {
+                    String rsLogin = rs.getString("login");
+                    if (login.equals(rsLogin)) {
+                        a = false;
+                        throw new LoginJaRegistradoNaBaseDeDadosException();
+                    }
                 }
                 this.conexao.commit();
             } catch (SQLException error) {
@@ -81,26 +84,24 @@ public class PessoaControl {
 
     public Long inserir(Pessoa pessoa, Endereco endereco) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into pessoa(id_endereco,nome,login,senha,cpf,rg,numero_sus,data_nascimento,sexo) values(?,?,?,?,?,?,?,?)returning id_pessoa";
+        String sqlQuery = "insert into pessoa(id_endereco,nome_pessoa,login,senha,cpf,rg,numero_sus,data_nascimento,sexo) values(?,?,?,?,?,?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
-            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, endereco.getId());
             stmt.setString(2, pessoa.getNome());
             stmt.setString(3, pessoa.getLogin());
             stmt.setString(4, pessoa.getSenha());
             stmt.setString(5, pessoa.getCpf());
-            stmt.setString(6, pessoa.getRegistroGeral());
+            stmt.setString(6, "!2312333");
             stmt.setString(7, pessoa.getNumeroSUS());
-            Date a = new Date(pessoa.getDataNascimento().getTime());
-            stmt.setDate(8, a);
+            stmt.setDate(8, new Date(pessoa.getDataNascimento().getYear(), pessoa.getDataNascimento().getMonth(), pessoa.getDataNascimento().getDate()));
             stmt.setString(9, pessoa.getSexo().toString());
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                id = rs.getLong("id_pessoa");
-            }
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+                id = rs.getLong(1);
 
             this.conexao.commit();
         } catch (SQLException error) {
