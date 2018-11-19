@@ -21,7 +21,7 @@ public class PublicoAlvoControl {
 
     public Long inserir(PublicoAlvo publicoAlvo, long id_vacina) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into publicoAlvo(id_vacina,min_idade,max_idade,sexo) values(?,?,?,?)";
+        String sqlQuery = "insert into publico_alvo(id_vacina,min_idade,max_idade,sexo) values(?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
@@ -33,10 +33,9 @@ public class PublicoAlvoControl {
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                id = rs.getLong("id_publicoAlvo");
+                id = rs.getLong("id_publico_alvo");
             }
             this.conexao.commit();
-            this.conexao.close();
         } catch (SQLException error) {
             this.conexao.rollback();
             throw error;

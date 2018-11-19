@@ -29,7 +29,7 @@ public class VacinaControl {
     //Obter vacina cadastrar em banco
     public List<Vacina> getVacinas() throws SQLException {
         List<Vacina> listaVacina = new ArrayList<>();
-        String sqlQuery = "select v.id_vacina,v.nome_vacina from vacina as v";
+        String sqlQuery = "select * from vacina as v";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
         stmt.execute();
         ResultSet resultSet = stmt.getResultSet();
@@ -45,7 +45,7 @@ public class VacinaControl {
     //Obter publico alvo de vacina
     public List<PublicoAlvo> obterPublicoAlvo(Long id_vacina) throws SQLException {
         List<PublicoAlvo> listaPublicoAlvo = new ArrayList<>();
-        String sqlQuery = "select pa.idade_max,pa.idade_min,pa.sexo from publico_alvo as pa natural inner join vacina where pa.id_vacina = ?";
+        String sqlQuery = "select pa.max_idade,pa.min_idade,pa.sexo from publico_alvo as pa natural inner join vacina where pa.id_vacina = ?";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
         stmt.setLong(1, id_vacina);
 
@@ -55,8 +55,8 @@ public class VacinaControl {
         while (resultSet.next()) {
             PublicoAlvo publicoAlvo = new PublicoAlvo();
 
-            publicoAlvo.setMinIdade(resultSet.getInt("idade_min"));
-            publicoAlvo.setMaxIdade(resultSet.getInt("idade_max"));
+            publicoAlvo.setMinIdade(resultSet.getInt("max_idade"));
+            publicoAlvo.setMaxIdade(resultSet.getInt("min_idade"));
             publicoAlvo.setSexo(Sexo.valueOf(resultSet.getString("sexo")));
 
             listaPublicoAlvo.add(publicoAlvo);
@@ -68,9 +68,9 @@ public class VacinaControl {
 
     //Inserir vacina
     public Long inserir(int doses, String nome, String obs) throws SQLException, ClassNotFoundException {
-        Long id = null;
-        String sqlQueryComObs = "insert into vacina(dose,vacina,observacao) values(?,?,?)";
-        String sqlQuerySemObs = "insert into vacina(dose,vacina) values(?,?)";
+        Long id_vacina = null;
+        String sqlQueryComObs = "insert into vacina(num_doses,nome_vacina,observacao) values(?,?,?)";
+        String sqlQuerySemObs = "insert into vacina(num_doses,nome_vacina) values(?,?)";
 
         PreparedStatement stmt = null;
         try {
@@ -80,13 +80,16 @@ public class VacinaControl {
                 stmt.setString(2, nome);
                 stmt.setString(3, obs);
             } else {
-                stmt = this.conexao.getConnection().prepareStatement(sqlQuerySemObs);
+                stmt = this.conexao.getConnection().prepareStatement(sqlQuerySemObs, Statement.RETURN_GENERATED_KEYS);
                 stmt.setInt(1, doses);
                 stmt.setString(2, nome);
             }
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
-            id = rs.getLong(1);
+            if (rs.next()) {
+                id_vacina = rs.getLong(1);
+            }
+            System.out.println("KEY: " + id_vacina);
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();
@@ -95,7 +98,7 @@ public class VacinaControl {
             stmt.close();
             this.conexao.close();
         }
-        return id;
+        return id_vacina;
     }
 
     //Validar dados de vacina

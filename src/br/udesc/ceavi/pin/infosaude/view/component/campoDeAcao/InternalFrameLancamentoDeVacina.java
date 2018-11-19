@@ -168,12 +168,11 @@ public class InternalFrameLancamentoDeVacina extends javax.swing.JInternalFrame 
                         .addGap(31, 31, 31)
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfNumSUS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))
+                        .addComponent(tfNumSUS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpUsuarioLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar_Usuario)
-                        .addGap(20, 20, 20))))
+                        .addComponent(btnBuscar_Usuario)))
+                .addGap(20, 20, 20))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();

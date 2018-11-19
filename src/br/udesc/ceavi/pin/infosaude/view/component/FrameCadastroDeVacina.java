@@ -46,6 +46,7 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
     }
 
     public List<PublicoAlvo> getPublicoAlvos() {
+        datePublicoAlvo = new ArrayList<>();
         int idadeMax = -1;
         int idadeMim = -1;
         int sexo = -1;
@@ -385,6 +386,7 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
                 if (!tfNumDose.getText().equals("")) {
                     dose = Integer.valueOf(tfNumDose.getText());
                     if (controladorVacina.validarVacina(dose, tfVacina_nome.getText())) {
+                        controladorVacina = new VacinaControl();
                         id_vacina = controladorVacina.inserir(dose, tfVacina_nome.getText(), tfObservacoes.getText());
                     }
                 } else {
@@ -394,14 +396,16 @@ public class FrameCadastroDeVacina extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
         } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro na Coneção com Banco");
         }
         try {
-            PublicoAlvoControl controladorPublicoAlvo = new PublicoAlvoControl();
             for (int i = 0; i < datePublicoAlvo.size(); i++) {
+                PublicoAlvoControl controladorPublicoAlvo = new PublicoAlvoControl();
                 controladorPublicoAlvo.inserir(datePublicoAlvo.get(i), id_vacina);
             }
         } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro na Coneção com Banco");
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed

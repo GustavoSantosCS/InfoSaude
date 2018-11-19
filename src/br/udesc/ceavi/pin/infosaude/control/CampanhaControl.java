@@ -49,21 +49,25 @@ public class CampanhaControl {
         return a;
     }
 
-    public Long inserir(Campanha campanha, Instituicao instituicao, Vacina vacina) throws SQLException, ClassNotFoundException {
+    public Long inserir(Campanha campanha, long id_instituicao, long id_vacina) throws SQLException, ClassNotFoundException {
         Long id = null;
         String sqlQuery = "insert into campanha(id_instituicao,id_vacina,data_inicio,data_fim) values(?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
             stmt = this.conexao.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, (int) instituicao.getId());
-            stmt.setInt(2, (int) vacina.getId());
-            stmt.setDate(3, (Date) campanha.getDataInicio());
-            stmt.setDate(4, (Date) campanha.getDataFim());
+            stmt.setLong(1, id_instituicao);
+            stmt.setLong(2, id_vacina);
+            java.sql.Date dataini = new Date(campanha.getDataInicio().getTime());
+            java.sql.Date datafim = new Date(campanha.getDataFim().getTime());
+            stmt.setDate(3, dataini);
+            stmt.setDate(4, datafim);
 
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
-            id = rs.getLong(1);
+            if (rs.next()) {
+                id = rs.getLong(1);
+            }
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();

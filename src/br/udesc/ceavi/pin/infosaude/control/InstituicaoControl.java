@@ -42,7 +42,7 @@ public class InstituicaoControl {
 
     public Long inserir(Instituicao instituicao, Endereco endereco) throws SQLException, ClassNotFoundException {
         Long id = null;
-        String sqlQuery = "insert into instituicao(id_endereco,cnpj,nome,senha) values(?,?,?,?)";
+        String sqlQuery = "insert into instituicao(id_endereco,cnpj,nome_instituicao,senha) values(?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
@@ -54,8 +54,10 @@ public class InstituicaoControl {
 
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
-            id = rs.getLong(1);
-
+            if (rs.next()) {
+                id = rs.getLong(1);
+            }
+            
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();

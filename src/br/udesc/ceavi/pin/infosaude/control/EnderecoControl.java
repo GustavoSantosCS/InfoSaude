@@ -63,8 +63,8 @@ public class EnderecoControl {
             String e = endereco.getEstado().toString();
             e = e.replaceAll(" ", "_");
             stmt.setString(7, e.toUpperCase());
-            stmt.setString(8, "GustavoSantosixi@gmail.com");
-            stmt.setString(9, "47 991518293");
+            stmt.setString(8, endereco.getEmail());
+            stmt.setString(9, endereco.getTelefone());
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {

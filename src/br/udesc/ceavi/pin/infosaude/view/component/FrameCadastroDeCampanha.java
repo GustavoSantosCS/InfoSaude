@@ -3,6 +3,7 @@ package br.udesc.ceavi.pin.infosaude.view.component;
 import br.udesc.ceavi.pin.infosaude.control.CampanhaControl;
 import br.udesc.ceavi.pin.infosaude.control.VacinaControl;
 import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
+import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
@@ -14,6 +15,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,9 +43,11 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
             vacinaControl = new VacinaControl();
             date = vacinaControl.getVacinas();
             for (int i = 0; i < date.size(); i++) {
+                vacinaControl = new VacinaControl();
                 date.get(i).setPublicosAlvos(vacinaControl.obterPublicoAlvo(date.get(i).getId()));
             }
         } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro no Sistema! erro ao comunicar com o Banco de Dados");
         }
 
@@ -199,11 +204,6 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
 
         cbVacina.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbVacina.setSelectedIndex(-1);
-        cbVacina.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbVacinaActionPerformed(evt);
-            }
-        });
 
         jLabel4.setText("Slogan:*");
 
@@ -211,9 +211,17 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
 
         jLabel6.setText("Data Fim:*");
 
-        tfDataInicio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        try {
+            tfDataInicio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##-##-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
-        tfDataFim.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        try {
+            tfDataFim.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##-##-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -295,51 +303,55 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-     public boolean validarCampos(String slogan, Date dataInicio, Date dataFim){
+    public boolean validarCampos(String slogan, Date dataInicio, Date dataFim) {
         boolean a = true;
-        
-        if(slogan.equals("")){
+
+        if (slogan.equals("")) {
             a = false;
-            JOptionPane.showMessageDialog(null,"INSIRA UM SLOGAN PARA A CAMPANHA");
+            JOptionPane.showMessageDialog(null, "INSIRA UM SLOGAN PARA A CAMPANHA");
         }
-        if(dataInicio.getDay() > dataFim.getDay()){
-            a = false;
-            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nDIA NÃO CONSISTE!");
+        if (dataInicio.getTime() > dataFim.getTime()) {
+            JOptionPane.showMessageDialog(null, "DADO INVALIDO! DATA INSERIDA INVALIDA \nANO NÃO CONSISTE!");
         }
-        if(dataInicio.getMonth()> dataFim.getMonth()){
-            a = false;
-            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nMÊS NÃO CONSISTE!");
-        }
-        if(dataInicio.getYear() > dataFim.getYear()){
-            a = false;
-            JOptionPane.showMessageDialog(null,"DADO INVALIDO! DATA INSERIDA INVALIDA \nANO NÃO CONSISTE!");
-        }
-        
         return a;
     }
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         String slogan = tfSlogn.getText();
-        String[] da = tfDataInicio.getText().split("/");
-        Date dataInicio = new Date(Integer.getInteger(da[2]), Integer.getInteger(da[1]), Integer.getInteger(da[0]));
-        da = tfDataFim.getText().split("/");
-        Date dataFim = new Date(Integer.getInteger(da[2]),Integer.getInteger(da[1]),Integer.getInteger(da[0]));
-        Vacina vacina = date.get(cbVacina.getSelectedIndex());
-        
-        campanha = new Campanha(slogan, vacina, dataInicio, dataFim);
-        boolean a = validarCampos(slogan, dataInicio, dataFim);
-        
-        
-        if(a == false){
-            JOptionPane.showMessageDialog(null, "DADOS INVALIDOS");
-        }else{
-//            campanhaControl.inserir(campanha, instituicao, vacina);
+        String[] da = tfDataInicio.getText().split("-");
+        String lastCrawlDate = da[2] + "-" + da[1] + "-" + da[0];
+        Date dataInicio = null;
+        try {
+            dataInicio = new SimpleDateFormat("yyyy-MM-dd").parse(lastCrawlDate);
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Erro");
         }
-        
-    }//GEN-LAST:event_btnCadastrarActionPerformed
+        da = tfDataFim.getText().split("-");
+        lastCrawlDate = da[2] + "-" + da[1] + "-" + da[0];
+        Date dataFim = null;
+        try {
+            dataFim = new SimpleDateFormat("yyyy-MM-dd").parse(lastCrawlDate);
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Erro");
+        }
+        System.out.println("nume de vacina: " + date.size());
+        System.out.println("Vacina selecionada: " + cbVacina.getSelectedIndex());
+        Vacina vacina = date.get(cbVacina.getSelectedIndex()-1);
 
-    private void cbVacinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVacinaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbVacinaActionPerformed
+        campanha = new Campanha(slogan, vacina, dataInicio, dataFim);
+
+        boolean a = validarCampos(slogan, dataInicio, dataFim);
+
+        if (a == false) {
+            JOptionPane.showMessageDialog(null, "DADOS INVALIDOS");
+        } else {
+            try {
+                campanhaControl = new CampanhaControl();
+                campanhaControl.inserir(campanha, 2, vacina.getId());
+            } catch (SQLException | ClassNotFoundException ex) {
+            }
+        }
+
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**
      * @param args the command line arguments

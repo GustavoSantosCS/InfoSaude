@@ -56,7 +56,7 @@ public class PessoaControl {
 
     }
 
-    public boolean validaCampos(String cpf, String login,
+    public boolean validaCampos(String cpf,
             String nome, String numero, String rg, String senha) throws DadosVaziosExcepitions, SQLException {
         boolean a = true;
         if (cpf.equals("")) {
@@ -96,13 +96,15 @@ public class PessoaControl {
             stmt.setString(5, pessoa.getCpf());
             stmt.setString(6, "!2312333");
             stmt.setString(7, pessoa.getNumeroSUS());
-            stmt.setDate(8, new Date(pessoa.getDataNascimento().getYear(), pessoa.getDataNascimento().getMonth(), pessoa.getDataNascimento().getDate()));
+            java.sql.Date dataN = new java.sql.Date(pessoa.getDataNascimento().getTime());
+            stmt.setDate(8, dataN);
             stmt.setString(9, pessoa.getSexo().toString());
 
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
                 id = rs.getLong(1);
-
+            }
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();
@@ -129,7 +131,8 @@ public class PessoaControl {
             stmt.setString(3, pessoa.getCpf());
             stmt.setString(4, pessoa.getRegistroGeral());
             stmt.setString(5, pessoa.getNumeroSUS());
-            stmt.setDate(8, (Date) pessoa.getDataNascimento());
+            java.sql.Date dataN = new java.sql.Date(pessoa.getDataNascimento().getTime());
+            stmt.setDate(8, dataN);
             stmt.setString(9, pessoa.getSexo().toString());
 
             linhasAlteradas = stmt.executeUpdate();
