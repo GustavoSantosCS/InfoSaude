@@ -35,6 +35,12 @@ public class Usuario extends Pessoa {
     }
     
     //Construtor
+    public Usuario(Pessoa pessoa){
+        super(pessoa.getId(),pessoa.getCpf(), pessoa.getDataNascimento(), pessoa.getLogin(),pessoa.getNome(), pessoa.getNumeroSUS(),
+                pessoa.getRegistroGeral(), pessoa.getSenha(), pessoa.getSexo(), pessoa.getEndereco());
+        this.carterinha = new Carterinha(pessoa);
+    }
+    //Construtor
     public Usuario() {
         super();
     }

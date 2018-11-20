@@ -2,7 +2,7 @@ package br.udesc.ceavi.pin.infosaude.view.frame.listener;
 
 import br.udesc.ceavi.pin.infosaude.control.excecpton.IdadeMaximaMenorQueIdadeMinimaPublicoAlvoException;
 import br.udesc.ceavi.pin.infosaude.view.component.FrameCadastroDeCampanha;
-import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastroPessoa;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastrarPessoa;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameTelaInicial;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameVacina;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
@@ -59,7 +59,7 @@ public class ListenerMenuUsuarioIntituicao implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            tela.addPanel(new InternalFrameCadastroPessoa());
+            tela.addPanel(new InternalFrameCadastrarPessoa());
         }
     }
 

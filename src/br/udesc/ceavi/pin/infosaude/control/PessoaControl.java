@@ -5,7 +5,6 @@ import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.LoginJaRegistradoNaBaseDeDadosException;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,7 +81,7 @@ public class PessoaControl {
         return a;
     }
 
-    public Long inserir(Pessoa pessoa, Endereco endereco) throws SQLException, ClassNotFoundException {
+    public Long inserir(Pessoa pessoa, Endereco endereco) throws SQLException {
         Long id = null;
         String sqlQuery = "insert into pessoa(id_endereco,nome_pessoa,login,senha,cpf,rg,numero_sus,data_nascimento,sexo) values(?,?,?,?,?,?,?,?,?)";
 
@@ -94,7 +93,7 @@ public class PessoaControl {
             stmt.setString(3, pessoa.getLogin());
             stmt.setString(4, pessoa.getSenha());
             stmt.setString(5, pessoa.getCpf());
-            stmt.setString(6, "!2312333");
+            stmt.setString(6, pessoa.getRegistroGeral());
             stmt.setString(7, pessoa.getNumeroSUS());
             java.sql.Date dataN = new java.sql.Date(pessoa.getDataNascimento().getTime());
             stmt.setDate(8, dataN);
@@ -105,6 +104,7 @@ public class PessoaControl {
             if (rs.next()) {
                 id = rs.getLong(1);
             }
+            pessoa.setId(id);
             this.conexao.commit();
         } catch (SQLException error) {
             this.conexao.rollback();

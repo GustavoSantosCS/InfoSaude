@@ -3,7 +3,6 @@ package br.udesc.ceavi.pin.infosaude.control;
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
 import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
-import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
 import br.udesc.ceavi.pin.infosaude.principal.Main;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -11,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -49,9 +49,9 @@ public class CampanhaControl {
         return a;
     }
 
-    public Long inserir(Campanha campanha, long id_instituicao, long id_vacina) throws SQLException, ClassNotFoundException {
+    public Long inserir(Campanha campanha, long id_instituicao, long id_vacina) throws SQLException {
         Long id = null;
-        String sqlQuery = "insert into campanha(id_instituicao,id_vacina,data_inicio,data_fim) values(?,?,?,?)";
+        String sqlQuery = "insert into campanha(id_instituicao,id_vacina,data_inicio,data_fim,slogam) values(?,?,?,?,?)";
 
         PreparedStatement stmt = null;
         try {
@@ -62,6 +62,7 @@ public class CampanhaControl {
             java.sql.Date datafim = new Date(campanha.getDataFim().getTime());
             stmt.setDate(3, dataini);
             stmt.setDate(4, datafim);
+            stmt.setString(4, campanha.getSlogan());
 
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
@@ -129,4 +130,39 @@ public class CampanhaControl {
         return listaDeCampanha;
     }
 
+    public Campanha buscarCampanhaPorIdVacina(Long id_vacina) {
+        String sqlQuery = "select c.id_campanha, c.slogan, c.data_fim, c.data_inicio, v.nome_vacina "
+                + "from campanha as c natural inner join vacina as v where c.id_vacina = ? and c.data_fim > ?";
+        PreparedStatement stmt = null;
+        Campanha campanha = null;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt.setLong(1, id_vacina);
+            stmt.setDate(2, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            stmt.executeQuery();
+            ResultSet rs = stmt.getResultSet();
+            if (rs.next()) {
+                campanha = new Campanha();
+                campanha.setId(rs.getLong(1));
+                campanha.setSlogan(rs.getString(2));
+                campanha.setDataFim(rs.getDate(3));
+                campanha.setDataInicio(rs.getDate(4));
+                Vacina vacina = new Vacina();
+                vacina.setId(id_vacina);
+                vacina.setVacina(rs.getString(5));
+                campanha.setVacina(vacina);
+            }
+            this.conexao.commit();
+        } catch (SQLException error) {
+            this.conexao.rollback();
+            error.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+            }
+            this.conexao.close();
+        }
+        return campanha;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class Pessoa implements Usuario_Logado{
 
-    private long id;
+    private long id_pessoa;
     private String cpf;
     private Date dataNascimento;
     private String login;
@@ -28,7 +28,7 @@ public class Pessoa implements Usuario_Logado{
     
     //Construtor
     public Pessoa(long id,String nome) {    
-        this.id = id;
+        this.id_pessoa = id;
         this.nome = nome;
     }
 
@@ -51,13 +51,26 @@ public class Pessoa implements Usuario_Logado{
         this.sexo = sexo;
         this.endereco = endereco;
     }
+    public Pessoa(long id_pessoa,String cpf, Date dataNascimento, String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
+        super();
+        this.id_pessoa = id_pessoa;        
+        this.cpf = cpf;
+        this.dataNascimento = dataNascimento;
+        this.login = login;
+        this.nome = nome;
+        this.numeroSUS = numeroSUS;
+        this.registroGeral = registroGeral;
+        this.senha = senha;
+        this.sexo = sexo;
+        this.endereco = endereco;
+    }
 
     public long getId() {
-        return id;
+        return id_pessoa;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.id_pessoa = id;
     }
     
     public String getCpf() {

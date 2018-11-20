@@ -1,42 +1,55 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
 import br.udesc.ceavi.pin.infosaude.control.EnderecoControl;
-import br.udesc.ceavi.pin.infosaude.control.InstituicaoControl;
+import br.udesc.ceavi.pin.infosaude.control.PessoaControl;
+import br.udesc.ceavi.pin.infosaude.control.UsuarioControl;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
+import br.udesc.ceavi.pin.infosaude.control.excecpton.LoginJaRegistradoNaBaseDeDadosException;
 import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.modelo.Estado;
-import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
+import br.udesc.ceavi.pin.infosaude.modelo.Pessoa;
+import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
 import java.awt.Dimension;
 import java.sql.SQLException;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author gusta
  */
-public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
+public class InternalFrameCadastrarPessoa extends javax.swing.JInternalFrame {
 
     private Endereco endereco;
-    private EnderecoControl enderecoControl;
-    private Instituicao instituicao;
-    private InstituicaoControl instituicaoControl;
+    private Pessoa pessoa;
+    private PessoaControl controladorPessoa;
+    private EnderecoControl controladorEndereco;
+    private String loginValido;
 
-    /**
-     * Creates new form InternalFrameInstituicao
-     */
-    public InternalFrameInstituicao() {
+    public InternalFrameCadastrarPessoa() {
         initComponents();
-        this.setTitle("Cadastro de Instuição");
         jScrollPane1.setMinimumSize(new Dimension(511, 467));
-        jPanel1.setPreferredSize(new Dimension(jScrollPane1.getSize().width, 850));
+        jPanel1.setPreferredSize(new Dimension(jScrollPane1.getSize().width, 950));
+
+        jpDadosPessoais.setMinimumSize(new Dimension(511, 315));
+        jpDadosPessoais.setPreferredSize(new Dimension(511, 315));
+        jpDadosSus.setMinimumSize(new Dimension(511, 100));
+        jpDadosSus.setPreferredSize(new Dimension(511, 100));
+        jpEndereco.setMinimumSize(new Dimension(511, 300));
+        jpEndereco.setPreferredSize(new Dimension(511, 300));
+        jpDadosDeAcesso.setMinimumSize(new Dimension(511, 120));
+        jpDadosDeAcesso.setPreferredSize(new Dimension(511, 120));
 
         tfSenha.setPreferredSize(new Dimension(200, 27));
         tfUsuario.setPreferredSize(new Dimension(200, 27));
+        tfCPF.setPreferredSize(new Dimension(60, 27));
         tfNome.setPreferredSize(new Dimension(250, 27));
-        tfCNPJ.setPreferredSize((new Dimension(200, 27)));
+        tfDataNascimento.setPreferredSize((new Dimension(200, 27)));
+        jCSexo.setPreferredSize(new Dimension(100, 27));
+        tfSUS.setPreferredSize(new Dimension(100, 27));
         tfSenha.setPreferredSize(new Dimension(200, 27));
         tfSenha.setMaximumSize(new Dimension(200, 27));
         tfUsuario.setPreferredSize(new Dimension(200, 27));
@@ -45,6 +58,15 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         for (int i = 0; i < Estado.values().length; i++) {
             jComboBox1.addItem(Estado.values()[i].toString());
         }
+
+    }
+
+    public String getjPanel1() {
+        return jPanel1.getSize().toString();
+    }
+
+    public String getRolagemSize() {
+        return jScrollPane1.getSize().toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -54,16 +76,24 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        jpDadosIntituicao = new javax.swing.JPanel();
+        jpDadosPessoais = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tfNome = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        tfCNPJ = new javax.swing.JFormattedTextField();
-        btnValidarCNPJ = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        tfTelefone = new javax.swing.JFormattedTextField();
+        tfCPF = new javax.swing.JFormattedTextField();
+        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        tfDataNascimento = new javax.swing.JFormattedTextField();
+        jCSexo = new javax.swing.JComboBox<>();
+        tfTelefone = new javax.swing.JFormattedTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         tfEmail = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        tfRg = new javax.swing.JTextField();
+        jpDadosSus = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        tfSUS = new javax.swing.JTextField();
         jpEndereco = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -88,8 +118,10 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         jpBTN = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        setTitle("Cadastro de Usuario");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jScrollPane1.setMaximumSize(null);
@@ -100,83 +132,119 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(493, 467));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jpDadosIntituicao.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados da Instituição", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
-        jpDadosIntituicao.setMaximumSize(new java.awt.Dimension(32767, 170));
+        jpDadosPessoais.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados Pessoais", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel1.setText("Nome:*");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel3.setText("CNPJ:*");
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel2.setText("CPF:*");
 
         try {
-            tfCNPJ.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##-###.###/####-##")));
+            tfCPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
 
-        btnValidarCNPJ.setText("Validar CNPJ");
-        btnValidarCNPJ.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnValidarCNPJActionPerformed(evt);
-            }
-        });
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel3.setText("Data de Nascimento:*");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel2.setText("TELEFONE:");
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel4.setText("Sexo:*");
+
+        try {
+            tfDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jCSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Masculino","Feminino"}));
 
         try {
             tfTelefone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##)#####-####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        tfTelefone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTelefoneActionPerformed(evt);
+            }
+        });
 
-        jLabel4.setText("EMAIL:");
+        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel16.setText("TELEFONE:");
 
-        javax.swing.GroupLayout jpDadosIntituicaoLayout = new javax.swing.GroupLayout(jpDadosIntituicao);
-        jpDadosIntituicao.setLayout(jpDadosIntituicaoLayout);
-        jpDadosIntituicaoLayout.setHorizontalGroup(
-            jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpDadosIntituicaoLayout.createSequentialGroup()
+        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel17.setText("EMAIL:");
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel18.setText("RG:*");
+
+        tfRg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfRgActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jpDadosPessoaisLayout = new javax.swing.GroupLayout(jpDadosPessoais);
+        jpDadosPessoais.setLayout(jpDadosPessoaisLayout);
+        jpDadosPessoaisLayout.setHorizontalGroup(
+            jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpDadosPessoaisLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jpDadosIntituicaoLayout.createSequentialGroup()
-                        .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tfTelefone, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tfCNPJ, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
-                            .addComponent(jLabel2))
-                        .addGap(157, 157, 157)
-                        .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(btnValidarCNPJ)
-                            .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jpDadosPessoaisLayout.createSequentialGroup()
+                        .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16)
+                            .addComponent(tfTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(105, 105, 105)
+                        .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel17)
+                            .addComponent(jCSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18)
+                            .addComponent(tfRg, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jpDadosIntituicaoLayout.setVerticalGroup(
-            jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpDadosIntituicaoLayout.createSequentialGroup()
+        jpDadosPessoaisLayout.setVerticalGroup(
+            jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpDadosPessoaisLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
                 .addComponent(jLabel1)
-                .addGap(15, 15, 15)
+                .addGap(10, 10, 10)
                 .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnValidarCNPJ))
-                .addGap(18, 18, 18)
-                .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(10, 10, 10)
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
+                    .addComponent(jLabel18))
+                .addGap(10, 10, 10)
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfRg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpDadosIntituicaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpDadosPessoaisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -185,7 +253,41 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 35, 0, 35);
-        jPanel1.add(jpDadosIntituicao, gridBagConstraints);
+        jPanel1.add(jpDadosPessoais, gridBagConstraints);
+
+        jpDadosSus.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados de SUS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Numero Do SUS");
+
+        javax.swing.GroupLayout jpDadosSusLayout = new javax.swing.GroupLayout(jpDadosSus);
+        jpDadosSus.setLayout(jpDadosSusLayout);
+        jpDadosSusLayout.setHorizontalGroup(
+            jpDadosSusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpDadosSusLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(jpDadosSusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(tfSUS, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(146, Short.MAX_VALUE))
+        );
+        jpDadosSusLayout.setVerticalGroup(
+            jpDadosSusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpDadosSusLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(jLabel5)
+                .addGap(10, 10, 10)
+                .addComponent(tfSUS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 35, 5, 35);
+        jPanel1.add(jpDadosSus, gridBagConstraints);
 
         jpEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Dados De Endereco", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
@@ -335,28 +437,26 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
         jpDadosDeAcesso.add(jLabel6, gridBagConstraints);
 
         jLabel7.setText("Senha:*");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
         jpDadosDeAcesso.add(jLabel7, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 144;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jpDadosDeAcesso.add(tfUsuario, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 144;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jpDadosDeAcesso.add(tfSenha, gridBagConstraints);
 
         btnValidarLogin.setText("Validar");
@@ -369,7 +469,6 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         jpDadosDeAcesso.add(btnValidarLogin, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -382,15 +481,42 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         jPanel1.add(jpDadosDeAcesso, gridBagConstraints);
 
         jButton4.setText("Cancelar");
-        jpBTN.add(jButton4);
 
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.setEnabled(false);
         btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCadastrarActionPerformed(evt);
             }
         });
-        jpBTN.add(btnCadastrar);
+
+        jLabel15.setText("Para que a opção Cadastrar Seja Liberada Valide o Login");
+
+        javax.swing.GroupLayout jpBTNLayout = new javax.swing.GroupLayout(jpBTN);
+        jpBTN.setLayout(jpBTNLayout);
+        jpBTNLayout.setHorizontalGroup(
+            jpBTNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpBTNLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addGap(20, 20, 20)
+                .addComponent(btnCadastrar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jpBTNLayout.createSequentialGroup()
+                .addContainerGap(83, Short.MAX_VALUE)
+                .addComponent(jLabel15)
+                .addContainerGap(83, Short.MAX_VALUE))
+        );
+        jpBTNLayout.setVerticalGroup(
+            jpBTNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpBTNLayout.createSequentialGroup()
+                .addGroup(jpBTNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCadastrar)
+                    .addComponent(jButton4))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel15)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -420,7 +546,33 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void btnValidarLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarLoginActionPerformed
+        String login = tfUsuario.getText();
+        try {
+            controladorPessoa = new PessoaControl();
+            try {
+                if (controladorPessoa.validaCampoLogin(login)) {
+                    loginValido = login;
+                    btnCadastrar.setEnabled(true);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
+                return;
+            } catch (DadosVaziosExcepitions | LoginJaRegistradoNaBaseDeDadosException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+                return;
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados1");
+            return;
+        }
+    }//GEN-LAST:event_btnValidarLoginActionPerformed
+
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        //Endereco
         // Endereco
         String bairro = tfBairro.getText();
 
@@ -436,168 +588,79 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
         Estado estado = Estado.values()[jComboBox1.getSelectedIndex()];
         String email = tfEmail.getText();
         String telefone = tfTelefone.getText();
-        //Instituicao
-        String cnpj = tfCNPJ.getText();
+        // Pessoa
         String nome = tfNome.getText();
-        String senha = String.copyValueOf(tfSenha.getPassword());
-
+        String cpf = tfCPF.getText();
+        String numeroSUS = tfSUS.getText();
+        String login = tfUsuario.getText();
+        String rg = tfRg.getText();
+        if (tfDataNascimento.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Data de Nascimento informada de Forma Incoreta");
+            return;
+        }
+        String[] da = tfDataNascimento.getText().split("/");
+        String lastCrawlDate = da[2] + "-" + da[1] + "-" + da[0];
+        Date data = null;
+        try {
+            data = new SimpleDateFormat("yyyy-MM-dd").parse(lastCrawlDate);
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Erro");
+        }
+        String senha = tfSenha.getText();
+        Sexo sexo = Sexo.values()[jCSexo.getSelectedIndex()];
+        System.out.println(data.toString());
         endereco = new Endereco(bairro, cep, cidade, complemento, email, numeroCasa, rua, telefone, estado);
-        instituicao = new Instituicao(cnpj, nome, senha, endereco);
-        boolean b = false;
-        boolean a = false;
-
-        try {
-            enderecoControl = new EnderecoControl();
-            enderecoControl.validaCampos(bairro, cep, cidade, numeroCasa, rua);
-            instituicaoControl = new InstituicaoControl();
-            instituicaoControl.validaCampos(cnpj, nome, senha);
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(InternalFrameInstituicao.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DadosVaziosExcepitions ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+        pessoa = new Pessoa(cpf, data, login, nome, numeroSUS, rg, senha, sexo, endereco);
+        if (!loginValido.equals(tfUsuario.getText())) {
+            JOptionPane.showMessageDialog(this, "Login Não Validado");
+            return;
         }
         try {
-            enderecoControl = new EnderecoControl();
-            instituicaoControl = new InstituicaoControl();
-            enderecoControl.inserir(endereco);
-            instituicaoControl.inserir(instituicao, endereco);
-            JOptionPane.showMessageDialog(this, "Cadastro Realizado Com Sucesso");
+            controladorEndereco = new EnderecoControl();
+            try {
+                controladorEndereco.validaCampos(bairro, cep, cidade, numeroCasa, rua);
+                controladorPessoa.validaCampos(cpf, nome, numeroSUS, rg, senha);
+            } catch (DadosVaziosExcepitions ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                return;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
+                return;
+            }
+            try {
+                controladorEndereco.inserir(endereco);
+                controladorPessoa = new PessoaControl();
+                controladorPessoa.inserir(pessoa, endereco);
+                Usuario usuario = new Usuario(pessoa);
+                UsuarioControl controladorUsuario = new UsuarioControl();
+                controladorUsuario.inserir(usuario);
+            } catch (ClassNotFoundException | SQLException ex) {
+                ex.printStackTrace();
+                return;
+            }
         } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro na Conexão com o Banco de Dados");
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro no Nosso Sistema de Banco de Dados");
+            return;
         }
+
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
-    private void btnValidarLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarLoginActionPerformed
+    private void tfTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTelefoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTelefoneActionPerformed
 
-    }//GEN-LAST:event_btnValidarLoginActionPerformed
+    private void tfRgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfRgActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfRgActionPerformed
 
-    private void btnValidarCNPJActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarCNPJActionPerformed
 
-    }//GEN-LAST:event_btnValidarCNPJActionPerformed
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj
-    ) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final InternalFrameInstituicao other = (InternalFrameInstituicao) obj;
-        if (!Objects.equals(this.btnValidarCNPJ, other.btnValidarCNPJ)) {
-            return false;
-        }
-        if (!Objects.equals(this.btnValidarLogin, other.btnValidarLogin)) {
-            return false;
-        }
-        if (!Objects.equals(this.jButton4, other.jButton4)) {
-            return false;
-        }
-        if (!Objects.equals(this.btnCadastrar, other.btnCadastrar)) {
-            return false;
-        }
-        if (!Objects.equals(this.jComboBox1, other.jComboBox1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel1, other.jLabel1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel10, other.jLabel10)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel11, other.jLabel11)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel12, other.jLabel12)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel13, other.jLabel13)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel14, other.jLabel14)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel3, other.jLabel3)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel6, other.jLabel6)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel7, other.jLabel7)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel8, other.jLabel8)) {
-            return false;
-        }
-        if (!Objects.equals(this.jLabel9, other.jLabel9)) {
-            return false;
-        }
-        if (!Objects.equals(this.jPanel1, other.jPanel1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jScrollPane1, other.jScrollPane1)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpBTN, other.jpBTN)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpDadosDeAcesso, other.jpDadosDeAcesso)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpDadosIntituicao, other.jpDadosIntituicao)) {
-            return false;
-        }
-        if (!Objects.equals(this.jpEndereco, other.jpEndereco)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfBairro, other.tfBairro)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfCEP, other.tfCEP)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfCNPJ, other.tfCNPJ)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfCidade, other.tfCidade)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfComplemento, other.tfComplemento)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfNome, other.tfNome)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfNumero, other.tfNumero)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfRua, other.tfRua)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfSenha, other.tfSenha)) {
-            return false;
-        }
-        if (!Objects.equals(this.tfUsuario, other.tfUsuario)) {
-            return false;
-        }
-        return true;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
-    private javax.swing.JButton btnValidarCNPJ;
     private javax.swing.JButton btnValidarLogin;
     private javax.swing.JButton jButton4;
+    private javax.swing.JComboBox<String> jCSexo;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -605,9 +668,14 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -616,17 +684,21 @@ public class InternalFrameInstituicao extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpBTN;
     private javax.swing.JPanel jpDadosDeAcesso;
-    private javax.swing.JPanel jpDadosIntituicao;
+    private javax.swing.JPanel jpDadosPessoais;
+    private javax.swing.JPanel jpDadosSus;
     private javax.swing.JPanel jpEndereco;
     private javax.swing.JTextField tfBairro;
     private javax.swing.JTextField tfCEP;
-    private javax.swing.JFormattedTextField tfCNPJ;
+    private javax.swing.JFormattedTextField tfCPF;
     private javax.swing.JTextField tfCidade;
     private javax.swing.JTextField tfComplemento;
+    private javax.swing.JFormattedTextField tfDataNascimento;
     private javax.swing.JTextField tfEmail;
     private javax.swing.JTextField tfNome;
     private javax.swing.JTextField tfNumero;
+    private javax.swing.JTextField tfRg;
     private javax.swing.JTextField tfRua;
+    private javax.swing.JTextField tfSUS;
     private javax.swing.JPasswordField tfSenha;
     private javax.swing.JFormattedTextField tfTelefone;
     private javax.swing.JTextField tfUsuario;

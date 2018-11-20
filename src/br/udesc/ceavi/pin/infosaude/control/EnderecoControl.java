@@ -47,7 +47,7 @@ public class EnderecoControl {
         return a;
     }
 
-    public Long inserir(Endereco endereco) throws SQLException, ClassNotFoundException {
+    public Long inserir(Endereco endereco) throws SQLException {
         Long id = null;
         String sqlQuery = "insert into endereco(bairro,cep,cidade,complemento,numero,rua,estado,email,telefone) values(?,?,?,?,?,?,?,?,?)";
 

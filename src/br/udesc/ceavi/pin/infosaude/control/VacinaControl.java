@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -67,7 +68,7 @@ public class VacinaControl {
     }
 
     //Inserir vacina
-    public Long inserir(int doses, String nome, String obs) throws SQLException, ClassNotFoundException {
+    public Long inserir(int doses, String nome, String obs) throws SQLException {
         Long id_vacina = null;
         String sqlQueryComObs = "insert into vacina(num_doses,nome_vacina,observacao) values(?,?,?)";
         String sqlQuerySemObs = "insert into vacina(num_doses,nome_vacina) values(?,?)";
@@ -137,11 +138,6 @@ public class VacinaControl {
         return listaDeVacina;
     }
 
-    public Long aplicarVacina(Vacina vacina) throws SQLException, ClassNotFoundException {
-        Long id = null;
-        return id;
-    }
-
     //Obter Numero de pessoa condizentes com o publico alvo informado
     public int getNumeroPessoaCondizentesComOPublicoAlvo(PublicoAlvo publico_alvo) {
 
@@ -149,7 +145,91 @@ public class VacinaControl {
     }
 
     public int getNumPessoaQueAplicaramVacinaPerantePublicoAlvo(PublicoAlvo publico_alvo, long id_vacina) {
-
         return -1;
+    }
+
+    public Vacina getVacinaPeloNome(String nome_vacina) {
+        System.out.println("Nome passado :" + nome_vacina);
+        String sqlQuery = "select v.id_vacina, v.num_doses from vacina as v where v.nome_vacina ~* ?";
+        Vacina vacina = null;
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt.setString(1, nome_vacina);
+            stmt.executeQuery();
+            ResultSet rs = stmt.getResultSet();
+            if (rs.next()) {
+                vacina = new Vacina();
+                vacina.setId(rs.getLong(1));
+                vacina.setDose(rs.getInt(2));
+            }
+            this.conexao.commit();
+        } catch (SQLException error) {
+            this.conexao.rollback();
+            error.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+            }
+            this.conexao.close();
+        }
+        return vacina;
+    }
+
+    public boolean aplicarVacina(Long id_vacina, Long id_usuario, Long id_campanha,Long id_profissional, int dose, String observacoes) throws SQLException {
+        String sqlQueryComCampanhaEOBS = "insert into carterinha(id_usuario,id_vacina,id_campanha,id_profissional,data_aplicacao,observacoes,dose_aplicada)"
+                + "values (?,?,?,?,?,?,?);";
+        String sqlQueryComOBS = "insert into carterinha(id_usuario,id_vacina,id_profissional,data_aplicacao,observacoes,dose_aplicada)"
+                + "values (?,?,?,?,?,?);";
+        String sqlQuery1ComCampanha = "insert into carterinha(id_usuario,id_vacina,id_campanha,id_profissional,data_aplicacao,dose_aplicada)"
+                + "values (?,?,?,?,?,?);";
+        String sqlQuerySIMPLE = "insert into carterinha(id_usuario,id_vacina,id_profissional,data_aplicacao,dose_aplicada)"
+                + "values (?,?,?,?,?);";
+        PreparedStatement stmt = null;
+        int q =-1;
+        try {
+            if (id_campanha == -1 && observacoes.equals("")) {
+                stmt = this.conexao.getConnection().prepareStatement(sqlQuerySIMPLE);
+                stmt.setLong(1, id_usuario);
+                stmt.setLong(2, id_vacina);
+                stmt.setLong(3, id_profissional);
+                stmt.setDate(4, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                stmt.setInt(5, dose);
+            } else if (id_campanha != -1 && observacoes.equals("")) {
+                stmt = this.conexao.getConnection().prepareStatement(sqlQuery1ComCampanha);
+                stmt.setLong(1, id_usuario);
+                stmt.setLong(2, id_vacina);
+                stmt.setLong(3, id_campanha);
+                stmt.setLong(4, id_profissional);
+                stmt.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                stmt.setInt(6, dose);
+            } else if (id_campanha == -1 && !observacoes.equals("")) {
+                stmt = this.conexao.getConnection().prepareStatement(sqlQueryComOBS);
+                stmt.setLong(1, id_usuario);
+                stmt.setLong(2, id_vacina);
+                stmt.setLong(3, id_profissional);
+                stmt.setDate(4, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                stmt.setString(5, observacoes);
+                stmt.setInt(6, dose);
+            } else if (id_campanha != -1 && !observacoes.equals("")) {
+                stmt = this.conexao.getConnection().prepareStatement(sqlQueryComCampanhaEOBS);
+                stmt.setLong(1, id_usuario);
+                stmt.setLong(2, id_vacina);
+                stmt.setLong(4, id_profissional);
+                stmt.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                stmt.setString(6, observacoes);
+                stmt.setInt(7, dose);
+            }
+            stmt.executeQuery();
+            ResultSet rs = stmt.getResultSet();
+        } catch (SQLException ex) {
+            this.conexao.rollback();
+            throw ex;
+        } finally {
+            this.conexao.close();
+            stmt.close();
+        }
+        return true;
     }
 }

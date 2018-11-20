@@ -19,7 +19,7 @@ public class PublicoAlvoControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public Long inserir(PublicoAlvo publicoAlvo, long id_vacina) throws SQLException, ClassNotFoundException {
+    public Long inserir(PublicoAlvo publicoAlvo, long id_vacina) throws SQLException {
         Long id = null;
         String sqlQuery = "insert into publico_alvo(id_vacina,min_idade,max_idade,sexo) values(?,?,?,?)";
         PreparedStatement stmt = null;

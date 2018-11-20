@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  * Esta Classe define os atributos de Campanha
@@ -35,12 +34,11 @@ public class ConexaoPostgresJDBC {
 
             Properties properties = new Properties();
             properties.put("user", "postgres");
-            properties.put("password", "CEAVI2018");
+            properties.put("password", "123456");
 
 
             this.con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/InfoSaude?ApplicationName=Projeto-InfoSaude", properties);
             this.con.setAutoCommit(false);
-//            JOptionPane.showMessageDialog(null, "Conectado");
     }
 
     public Connection getConnection() {

@@ -40,7 +40,7 @@ public class InstituicaoControl {
         return a;
     }
 
-    public Long inserir(Instituicao instituicao, Endereco endereco) throws SQLException, ClassNotFoundException {
+    public Long inserir(Instituicao instituicao, Endereco endereco) throws SQLException{
         Long id = null;
         String sqlQuery = "insert into instituicao(id_endereco,cnpj,nome_instituicao,senha) values(?,?,?,?)";
 

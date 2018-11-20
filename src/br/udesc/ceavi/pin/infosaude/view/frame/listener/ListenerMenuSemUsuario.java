@@ -1,7 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.view.frame.listener;
 
-import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastroPessoa;
-import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameInstituicao;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastrarPessoa;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCadastrarInstituicao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameLogin;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameTelaInicial;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
@@ -57,7 +57,7 @@ public class ListenerMenuSemUsuario implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            tela.addPanel(new InternalFrameCadastroPessoa());
+            tela.addPanel(new InternalFrameCadastrarPessoa());
         }
     }
 
@@ -65,7 +65,7 @@ public class ListenerMenuSemUsuario implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            tela.addPanel(new InternalFrameInstituicao());
+            tela.addPanel(new InternalFrameCadastrarInstituicao());
         }
     }
 

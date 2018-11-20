@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +22,7 @@ public class ProfissionalControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public Long inserir(Profissional profissional, Instituicao instituicao) throws SQLException, ClassNotFoundException {
+    public Long inserir(Profissional profissional, Instituicao instituicao) throws SQLException {
         Long id = null;
         String sqlQuery = "insert into profissional(id_instituicao) values(?)";
 
@@ -45,5 +47,30 @@ public class ProfissionalControl {
         }
 
         return id;
+    }
+
+    public Long getAcessoProfissional(String login, String senha) throws SQLException {
+        Long id_profissional = -1l;
+        String sqlQuery = "select prof.id_profissional from pessoa as p natural inner join profissional as prof where p.login = ? and p.senha = ?";
+        PreparedStatement stmt = null;
+        int q = -1;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt.setString(1, login);
+            stmt.setString(2, senha);
+            stmt.executeQuery();
+            ResultSet rs = stmt.getResultSet();
+            while (rs.next()) {                
+                id_profissional = rs.getLong("id_profissional");
+            }
+        } catch (SQLException ex) {
+            this.conexao.rollback();
+            throw ex;
+        } finally {
+            stmt.close();
+            this.conexao.close();
+        }
+        
+        return id_profissional;
     }
 }

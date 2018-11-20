@@ -3,7 +3,6 @@ package br.udesc.ceavi.pin.infosaude.view.component;
 import br.udesc.ceavi.pin.infosaude.control.CampanhaControl;
 import br.udesc.ceavi.pin.infosaude.control.VacinaControl;
 import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
-import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import br.udesc.ceavi.pin.infosaude.modelo.Vacina;
@@ -346,7 +345,7 @@ public class FrameCadastroDeCampanha extends javax.swing.JFrame {
         } else {
             try {
                 campanhaControl = new CampanhaControl();
-                campanhaControl.inserir(campanha, 2, vacina.getId());
+                campanhaControl.inserir(campanha, 1, vacina.getId());
             } catch (SQLException | ClassNotFoundException ex) {
             }
         }
