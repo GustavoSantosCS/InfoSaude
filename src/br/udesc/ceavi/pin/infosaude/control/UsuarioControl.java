@@ -20,7 +20,7 @@ public class UsuarioControl {
         this.conexao = new ConexaoPostgresJDBC();
     }
 
-    public Long inserir(Usuario usuario) throws SQLException {
+    public boolean inserir(Usuario usuario) throws SQLException {
         Long id = null;
         String sqlQuery = "insert into usuario(id_pessoa) values(?)";
         PreparedStatement stmt = null;
@@ -37,23 +37,20 @@ public class UsuarioControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
-        return id;
+        return true;
     }
 
-    /*
-    *metodo para inserir vacina em usuario
-     */
-    public Long inserirVacina() {
-        Long id = null;
-
-        return id;
-    }
-
-
-    public Pessoa buscarPeloCPF(String cpf_usuario) {
+    public Pessoa buscarPeloCPF(String cpf_usuario) throws SQLException {
         String sqlQuery = "select u.id_usuario, p.nome_pessoa, p.numero_sus from usuario as u natural inner join pessoa as p where p.cpf = ?";
         PreparedStatement stmt = null;
         Pessoa pessoa = null;
@@ -71,12 +68,17 @@ public class UsuarioControl {
         } catch (SQLException error) {
             this.conexao.rollback();
             error.printStackTrace();
+            throw error;
         } finally {
-            try {
-                stmt.close();
-            } catch (SQLException ex) {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
             }
-            this.conexao.close();
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
         return pessoa;
     }

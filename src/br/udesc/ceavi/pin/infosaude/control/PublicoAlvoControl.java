@@ -40,8 +40,15 @@ public class PublicoAlvoControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
 
         return id;

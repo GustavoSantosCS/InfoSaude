@@ -1,5 +1,7 @@
 package br.udesc.ceavi.pin.infosaude.modelo;
 
+import java.util.Date;
+
 /**
  * Esta Classe define os atributos do Profissional
  *
@@ -14,20 +16,24 @@ package br.udesc.ceavi.pin.infosaude.modelo;
 public class Profissional extends Pessoa {
 
     private Instituicao instituicao;
+    private Long id_profissional;
 
     //Construtor
     public Profissional() {
         super();
     }
 
-    //Construtor
-    public Profissional(long id, String nome) {
-        super(id,nome);
+    public Profissional(Long id_pessoa, Long id_profissional, String cpf, Date dataNascimento,
+            String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo) {
+        super(id_pessoa, cpf, dataNascimento, login, nome, numeroSUS, registroGeral, senha, sexo);
+        this.id_profissional = id_profissional;
     }
 
     //Construtor
-    public Profissional(String nome) {
-        super("", null, "", nome, "", "", "", Sexo.F, null);
+    public Profissional(long id_pessoa,Long id_profissional, String nome) {
+        super.setNome(nome);
+        super.setId(id_pessoa);
+        this.id_profissional = id_profissional;
     }
 
     //Construtor

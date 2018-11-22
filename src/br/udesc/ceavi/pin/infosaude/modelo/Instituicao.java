@@ -1,5 +1,6 @@
 package br.udesc.ceavi.pin.infosaude.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,13 +31,13 @@ public class Instituicao implements Usuario_Logado {
     }
 
     //Construtor
-    public Instituicao(String cnpj, String nome, Endereco endereco, List<Profissional> listaDeProfissionais, List<Campanha> campanhas) {
-        super();
+    public Instituicao(long id, String cnpj, String nome, String senha) {
+        this.id = id;
         this.cnpj = cnpj;
         this.nome = nome;
-        this.endereco = endereco;
-        this.listaDeProfissionais = listaDeProfissionais;
-        this.campanhas = campanhas;
+        this.senha = senha;
+        this.listaDeProfissionais = new ArrayList<>();
+        this.campanhas = campanhas = new ArrayList<>();
     }
 
     public Instituicao(String cnpj, String nome, String senha, Endereco endereco) {

@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -45,7 +47,6 @@ public class CampanhaControl {
             a = false;
             JOptionPane.showMessageDialog(null, "DADO INVALIDO! DATA INSERIDA INVALIDA \nANO NÃO CONSISTE!");
         }
-
         return a;
     }
 
@@ -74,8 +75,15 @@ public class CampanhaControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
         return id;
     }
@@ -87,7 +95,7 @@ public class CampanhaControl {
                 + "from carterinha natural inner join campanha"
                 + "where c.id_usuario = ?";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery1);
-        stmt.setLong(1, Main.privilegio.getId());
+        stmt.setLong(1, Main.usuario.getId());
         stmt.execute();
         ResultSet resultSet = stmt.getResultSet();
 
@@ -100,12 +108,19 @@ public class CampanhaControl {
             campanha.setDataInicio(new Date(resultSet.getShort(resultSet.getString("data_inicio"))));
             listaDeCampanha.add(campanha);
         }
-        stmt.close();
-        this.conexao.close();
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+            }
+        }
+        if (conexao != null) {
+            this.conexao.close();
+        }
         return listaDeCampanha;
     }
 
-    //Obtem todas as campanha
+//Obtem todas as campanha
     public List<Campanha> getCampanhas() throws SQLException {
         List<Campanha> listaDeCampanha = new ArrayList();
         String sqlQuery = "select * from campanha natural inner join vacina";
@@ -124,9 +139,15 @@ public class CampanhaControl {
             campanha.setDataInicio(new Date(resultSet.getShort(resultSet.getString("data_inicio"))));
             listaDeCampanha.add(campanha);
         }
-
-        stmt.close();
-        this.conexao.close();
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+            }
+        }
+        if (conexao != null) {
+            this.conexao.close();
+        }
         return listaDeCampanha;
     }
 
@@ -157,11 +178,15 @@ public class CampanhaControl {
             this.conexao.rollback();
             error.printStackTrace();
         } finally {
-            try {
-                stmt.close();
-            } catch (SQLException ex) {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
             }
-            this.conexao.close();
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
         return campanha;
     }

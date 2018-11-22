@@ -5,10 +5,17 @@ import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.LoginJaRegistradoNaBaseDeDadosException;
+import br.udesc.ceavi.pin.infosaude.modelo.Instituicao;
+import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
+import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario_Logado;
+import br.udesc.ceavi.pin.infosaude.principal.Main;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 /**
  *
@@ -47,12 +54,18 @@ public class PessoaControl {
                 this.conexao.rollback();
                 throw error;
             } finally {
-                stmt.close();
-                this.conexao.close();
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch (SQLException ex) {
+                    }
+                }
+                if (this.conexao != null) {
+                    this.conexao.close();
+                }
             }
             return a;
         }
-
     }
 
     public boolean validaCampos(String cpf,
@@ -110,8 +123,15 @@ public class PessoaControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
         }
 
         return id;
@@ -134,13 +154,105 @@ public class PessoaControl {
             java.sql.Date dataN = new java.sql.Date(pessoa.getDataNascimento().getTime());
             stmt.setDate(8, dataN);
             stmt.setString(9, pessoa.getSexo().toString());
-
             linhasAlteradas = stmt.executeUpdate();
             this.conexao.commit();
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
         }
         return linhasAlteradas;
+    }
+
+    public boolean login(String login, String senha) throws SQLException {
+        String sqlUsuario = "select * from pessoa as p natural inner join usario where p.login = ? and p.senha = ?";
+        String sqlProfissional = "select * from pessoa as p natural inner join usario where p.login = ? and p.senha = ?";
+        String sqlInstuicao = "select * from instituicao as i where i.cnpj = ? and p.senha = ?";
+        boolean usuarioEncontrado = false;
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sqlUsuario);
+            stmt.setString(1, login);
+            stmt.setString(2, login);
+            ResultSet rs = stmt.executeQuery();
+            Usuario_Logado p = null;
+            while (rs.next()) {
+                Long id_pessoa = rs.getLong(1);
+                if (id_pessoa != null) {
+                    p = new Usuario(id_pessoa,
+                            rs.getLong("id_usuario"),
+                            rs.getString("cpf"),
+                            new Date(rs.getString("data_nascimento")),
+                            rs.getString("login"),
+                            rs.getString("nome"),
+                            rs.getString("numero_sus"),
+                            rs.getString("rg"),
+                            rs.getString("senha"),
+                            Sexo.valueOf(rs.getString("sexo")));
+                    Main.setParametrosUsuario(p, rs.getLong("id_endereco"));
+                    usuarioEncontrado = true;
+                }
+            }
+
+            if (!usuarioEncontrado) {
+                stmt = this.conexao.getConnection().prepareStatement(sqlProfissional);
+                stmt.setString(1, login);
+                stmt.setString(2, login);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Long id_pessoa = rs.getLong(1);
+                    if (id_pessoa != null) {
+                        p = new Profissional(id_pessoa,
+                                rs.getLong("id_profissional"),
+                                rs.getString("cpf"),
+                                new Date(rs.getString("data_nascimento")),
+                                rs.getString("login"),
+                                rs.getString("nome"),
+                                rs.getString("numero_sus"),
+                                rs.getString("rg"),
+                                rs.getString("senha"),
+                                Sexo.valueOf(rs.getString("sexo")));
+                        Main.setParametrosUsuario(p, rs.getLong("id_endereco"));
+                        usuarioEncontrado = true;
+                    }
+                }
+            }
+
+            if (!usuarioEncontrado) {
+                stmt = this.conexao.getConnection().prepareStatement(sqlInstuicao);
+                stmt.setString(1, login);
+                stmt.setString(2, login);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Long id_instituicao = rs.getLong(1);
+                    if (id_instituicao != null) {
+                        p = new Instituicao(id_instituicao, rs.getString("cnpj"), rs.getString("nome_instituicao"), rs.getString("senha"));
+                        usuarioEncontrado = true;
+                        Main.setParametrosUsuario(p, rs.getLong("id_endereco"));
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw ex;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
+        }
+
+        return true;
     }
 }

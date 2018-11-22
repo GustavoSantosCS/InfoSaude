@@ -3,10 +3,13 @@ package br.udesc.ceavi.pin.infosaude.control;
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
 import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
+import br.udesc.ceavi.pin.infosaude.modelo.Estado;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -75,9 +78,53 @@ public class EnderecoControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
         }
         return id;
+    }
+
+    public Endereco getEndereco(Long id_endereco) throws SQLException {
+        Endereco endereco = null;
+        String sqlQuery = "select * from endereco where id_endereco = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt.setLong(1, id_endereco);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                endereco = new Endereco(rs.getString("bairro"),
+                        rs.getString("cep"),
+                        rs.getString("cidade"),
+                        rs.getString("complemeto"),
+                        rs.getString("email"),
+                        rs.getInt("numero"),
+                        rs.getString("rua"),
+                        rs.getString("telefone"),
+                        Estado.valueOf("estado"));
+                endereco.setId(id_endereco);
+            }
+        } catch (SQLException error) {
+            this.conexao.rollback();
+            throw error;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
+        }
+        return endereco;
     }
 }

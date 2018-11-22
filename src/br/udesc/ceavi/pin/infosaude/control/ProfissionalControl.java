@@ -7,8 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -42,8 +40,15 @@ public class ProfissionalControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
 
         return id;
@@ -60,17 +65,24 @@ public class ProfissionalControl {
             stmt.setString(2, senha);
             stmt.executeQuery();
             ResultSet rs = stmt.getResultSet();
-            while (rs.next()) {                
+            while (rs.next()) {
                 id_profissional = rs.getLong("id_profissional");
             }
         } catch (SQLException ex) {
             this.conexao.rollback();
             throw ex;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
-        
+
         return id_profissional;
     }
 }

@@ -29,39 +29,50 @@ public class Vacina {
     public Vacina() {
         super();
     }
+
     public Vacina(long id_vacina) {
         this.id_vacina = id_vacina;
     }
 
     //Construtor
-    public Vacina(Date dataAplicacao, int dose, String vacina, Profissional profissional, List<PublicoAlvo> publicosAlvos) {
+    public Vacina(Date dataAplicacao, int dose, String nome_vacina, Profissional profissional, List<PublicoAlvo> publicosAlvos) {
         super();
         this.dataAplicacao = dataAplicacao;
         this.dose = dose;
-        this.nome_vacina = vacina;
+        this.nome_vacina = nome_vacina;
         this.profissional = profissional;
         this.publicosAlvos = publicosAlvos;
     }
-    public Vacina(int dose, String vacina,  List<PublicoAlvo> publicosAlvos) {
+
+    public Vacina(int dose, String nome_vacina, List<PublicoAlvo> publicosAlvos) {
         super();
         this.dataAplicacao = null;
         this.dose = dose;
-        this.nome_vacina = vacina;
+        this.nome_vacina = nome_vacina;
         this.profissional = null;
         this.publicosAlvos = publicosAlvos;
     }
 
-    public Vacina(Date dataAplicacao, int dose, String vacina, Profissional profissional, PublicoAlvo publicosAlvos) {
+    public Vacina(Date dataAplicacao, int dose, String nome_vacina, Profissional profissional) {
         super();
         this.dataAplicacao = dataAplicacao;
         this.dose = dose;
-        this.nome_vacina = vacina;
+        this.nome_vacina = nome_vacina;
+        this.profissional = profissional;
+        this.publicosAlvos = null;
+    }
+
+    public Vacina(Date dataAplicacao, int dose, String nome_vacina, Profissional profissional, PublicoAlvo publicosAlvos) {
+        super();
+        this.dataAplicacao = dataAplicacao;
+        this.dose = dose;
+        this.nome_vacina = nome_vacina;
         this.profissional = profissional;
         this.publicosAlvos = new ArrayList<>();
         this.publicosAlvos.add(publicosAlvos);
     }
 
-    public Vacina(long id_vacina,int num_dose, String nome_vacina, String observacoes) {
+    public Vacina(long id_vacina, int num_dose, String nome_vacina, String observacoes) {
         super();
         this.id_vacina = id_vacina;
         this.dose = num_dose;
@@ -86,7 +97,7 @@ public class Vacina {
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
-    
+
     public Date getDataAplicacao() {
         return dataAplicacao;
     }

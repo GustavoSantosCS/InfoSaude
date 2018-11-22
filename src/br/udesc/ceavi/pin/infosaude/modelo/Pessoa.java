@@ -13,7 +13,7 @@ import java.util.Date;
  * @version 1.0
  * @since 03/11/2018
  */
-public class Pessoa implements Usuario_Logado{
+public class Pessoa implements Usuario_Logado {
 
     private long id_pessoa;
     private String cpf;
@@ -25,12 +25,6 @@ public class Pessoa implements Usuario_Logado{
     private String senha;
     private Sexo sexo;
     private Endereco endereco;
-    
-    //Construtor
-    public Pessoa(long id,String nome) {    
-        this.id_pessoa = id;
-        this.nome = nome;
-    }
 
     //Construtor
     public Pessoa() {
@@ -38,9 +32,22 @@ public class Pessoa implements Usuario_Logado{
         this.nome = "Teste InfoSaude";
     }
 
-    //Construtor
-    public Pessoa(String cpf, Date dataNascimento, String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
+    public Pessoa(long id_pessoa, String cpf, Date dataNascimento, String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo) {
         super();
+        this.id_pessoa = id_pessoa;
+        this.cpf = cpf;
+        this.dataNascimento = dataNascimento;
+        this.login = login;
+        this.nome = nome;
+        this.numeroSUS = numeroSUS;
+        this.registroGeral = registroGeral;
+        this.senha = senha;
+        this.sexo = sexo;
+    }
+
+    public Pessoa(long id_pessoa, String cpf, Date dataNascimento, String login, String nome, 
+            String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
+        this.id_pessoa = id_pessoa;
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
         this.login = login;
@@ -51,9 +58,8 @@ public class Pessoa implements Usuario_Logado{
         this.sexo = sexo;
         this.endereco = endereco;
     }
-    public Pessoa(long id_pessoa,String cpf, Date dataNascimento, String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
-        super();
-        this.id_pessoa = id_pessoa;        
+    public Pessoa( String cpf, Date dataNascimento, String login, String nome, 
+            String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
         this.login = login;
@@ -72,7 +78,7 @@ public class Pessoa implements Usuario_Logado{
     public void setId(long id) {
         this.id_pessoa = id;
     }
-    
+
     public String getCpf() {
         return cpf;
     }

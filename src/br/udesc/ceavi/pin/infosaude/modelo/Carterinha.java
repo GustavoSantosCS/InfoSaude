@@ -13,12 +13,14 @@ import java.util.List;
  * @author Ricardo José Pinto
  * @version 1.0
  * @since 15/11/2018
- */public class Carterinha {
-     private final Pessoa usuario;
-     private List<Vacina> listaDeVacinaTomadas = new ArrayList<>(); 
-     private List<Campanha> listaDeCampanhaParticipadas  = new ArrayList<>();
+ */
+public class Carterinha {
 
-    public Carterinha(Pessoa usuario) {
+    private final Usuario usuario;
+    private List<Vacina> listaDeVacinaTomadas = new ArrayList<>();
+    private List<Campanha> listaDeCampanhaParticipadas = new ArrayList<>();
+
+    public Carterinha(Usuario usuario) {
         this.usuario = usuario;
     }
 
@@ -27,31 +29,35 @@ import java.util.List;
     }
 
     public Vacina getVacinaPorNome(String nome) {
-        if(this.listaDeVacinaTomadas.isEmpty())
-        for (int i = 0; i < listaDeVacinaTomadas.size(); i++) {
-            if(listaDeVacinaTomadas.get(i).getVacina().equals(nome)){
-                return listaDeVacinaTomadas.get(i);
+        if (this.listaDeVacinaTomadas.isEmpty()) {
+            for (int i = 0; i < listaDeVacinaTomadas.size(); i++) {
+                if (listaDeVacinaTomadas.get(i).getVacina().equals(nome)) {
+                    return listaDeVacinaTomadas.get(i);
+                }
             }
         }
         return null;
     }
 
     public Campanha getCampanhaPorNome(String nome) {
-        if(this.listaDeCampanhaParticipadas.isEmpty())
-        for (int i = 0; i < listaDeCampanhaParticipadas.size(); i++) {
-            if(listaDeCampanhaParticipadas.get(i).getVacina().equals(nome)){
-                return listaDeCampanhaParticipadas.get(i);
+        if (this.listaDeCampanhaParticipadas.isEmpty()) {
+            for (int i = 0; i < listaDeCampanhaParticipadas.size(); i++) {
+                if (listaDeCampanhaParticipadas.get(i).getVacina().equals(nome)) {
+                    return listaDeCampanhaParticipadas.get(i);
+                }
             }
         }
         return null;
     }
 
     public boolean setListaDeCampanhaParticipadas(List<Campanha> listaDeCampanhaParticipadas) {
+        this.listaDeCampanhaParticipadas = listaDeCampanhaParticipadas;
         return true;
     }
 
     public boolean setListaDeVacinaTomadas(List<Vacina> listaDeVacinaTomadas) {
+        this.listaDeVacinaTomadas = listaDeVacinaTomadas;
         return true;
     }
-    
+
 }

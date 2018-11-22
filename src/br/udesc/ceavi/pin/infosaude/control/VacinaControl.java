@@ -2,6 +2,7 @@ package br.udesc.ceavi.pin.infosaude.control;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
 import br.udesc.ceavi.pin.infosaude.control.excecpton.DadosVaziosExcepitions;
+import br.udesc.ceavi.pin.infosaude.modelo.Campanha;
 import br.udesc.ceavi.pin.infosaude.modelo.Profissional;
 import br.udesc.ceavi.pin.infosaude.modelo.PublicoAlvo;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,9 +63,16 @@ public class VacinaControl {
             publicoAlvo.setSexo(Sexo.valueOf(resultSet.getString("sexo")));
 
             listaPublicoAlvo.add(publicoAlvo);
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
-        stmt.close();
-        this.conexao.close();
         return listaPublicoAlvo;
     }
 
@@ -96,9 +105,17 @@ public class VacinaControl {
             this.conexao.rollback();
             throw error;
         } finally {
-            stmt.close();
-            this.conexao.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
+
         return id_vacina;
     }
 
@@ -116,11 +133,11 @@ public class VacinaControl {
     //Obtem as Vacinas aplicadas no usuario
     public List<Vacina> getVacinaUsuario() throws SQLException {
         List<Vacina> listaDeVacina = new ArrayList();
-        String sqlQuery1 = "select v.id_vacina, v.nome_vacina,c.dose_aplicada,c.observacoes,c.id_profissional, p.nome_pessoa as profissional"
+        String sqlQuery1 = "select v.id_vacina, v.nome_vacina,c.dose_aplicada,c.observacoes,c.id_profissional, p.nome_pessoa as profissional, p.id_pessoa"
                 + "from vacina as v natural inner join carterinha as c natura inner join pessoa as p"
                 + "where c.id_usuario = ?";
         PreparedStatement stmt = this.conexao.getConnection().prepareStatement(sqlQuery1);
-        stmt.setLong(1, Main.privilegio.getId());
+        stmt.setLong(1, Main.usuario.getId());
         stmt.execute();
         ResultSet resultSet = stmt.getResultSet();
 
@@ -130,11 +147,18 @@ public class VacinaControl {
             vacina.setVacina(resultSet.getString("nome_vacina"));
             vacina.setDose(resultSet.getInt("dose_aplivada"));
             vacina.setObservacao(resultSet.getString("observacoes"));
-            vacina.setProfissional(new Profissional(resultSet.getLong("id_profissional"), resultSet.getString("profissional")));
+            vacina.setProfissional(new Profissional(resultSet.getLong("id_pessoa"), resultSet.getLong("id_profissional"), resultSet.getString("profissional")));
             listaDeVacina.add(vacina);
         }
-        stmt.close();
-        this.conexao.close();
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+            }
+        }
+        if (conexao != null) {
+            this.conexao.close();
+        }
         return listaDeVacina;
     }
 
@@ -177,7 +201,7 @@ public class VacinaControl {
         return vacina;
     }
 
-    public boolean aplicarVacina(Long id_vacina, Long id_usuario, Long id_campanha,Long id_profissional, int dose, String observacoes) throws SQLException {
+    public boolean aplicarVacina(Long id_vacina, Long id_usuario, Long id_campanha, Long id_profissional, int dose, String observacoes) throws SQLException {
         String sqlQueryComCampanhaEOBS = "insert into carterinha(id_usuario,id_vacina,id_campanha,id_profissional,data_aplicacao,observacoes,dose_aplicada)"
                 + "values (?,?,?,?,?,?,?);";
         String sqlQueryComOBS = "insert into carterinha(id_usuario,id_vacina,id_profissional,data_aplicacao,observacoes,dose_aplicada)"
@@ -187,7 +211,7 @@ public class VacinaControl {
         String sqlQuerySIMPLE = "insert into carterinha(id_usuario,id_vacina,id_profissional,data_aplicacao,dose_aplicada)"
                 + "values (?,?,?,?,?);";
         PreparedStatement stmt = null;
-        int q =-1;
+        int q = -1;
         try {
             if (id_campanha == -1 && observacoes.equals("")) {
                 stmt = this.conexao.getConnection().prepareStatement(sqlQuerySIMPLE);
@@ -227,9 +251,92 @@ public class VacinaControl {
             this.conexao.rollback();
             throw ex;
         } finally {
-            this.conexao.close();
-            stmt.close();
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
         }
+
         return true;
+    }
+
+    public List<Campanha> getCampanhaDoUsuario(Long id_usuario) throws SQLException {
+        List<Campanha> lista = new ArrayList<>();
+        String sql = "select p.id_pessoa,c.id_profissional,p.nome_pessoa, c.data_aplicacao,"
+                + "c.dose_aplicada, v.nome_vacina,camp.slogan,camp.data_inicio,camp.data_fim"
+                + "from carterinha as c natural inner join campanha as camp "
+                + "natural inner join vacina as v"
+                + "inner join pessoa as p on (p.id_pessoa = c.id_profissional) where c.id_usuario = ?";
+        PreparedStatement stmt = null;
+        Vacina vacinaDaCampanha;
+        Campanha campanha;
+        Profissional prof;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sql);
+            stmt.setLong(1, id_usuario);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                prof = new Profissional(rs.getLong("id_pessoa"), rs.getLong("id_profissional"), rs.getString("nome_profissional"));
+                vacinaDaCampanha = new Vacina(new Date(rs.getString("data_aplicacao")), rs.getInt("dose_aplicada"), rs.getString("nome_vacina"), prof);
+                campanha = new Campanha(rs.getString("slogan"), vacinaDaCampanha, new Date(rs.getString("data_inicio")), new Date(rs.getString("data_fim")));
+                lista.add(campanha);
+            }
+        } catch (SQLException ex) {
+            this.conexao.rollback();
+            throw ex;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
+        }
+
+        return lista;
+    }
+
+    public List<Vacina> getVacinaDoUsuario(Long id_usuario) throws SQLException {
+        List<Vacina> lista = new ArrayList<>();
+        String sql = "select p.id_pessoa,c.id_profissional,p.nome_pessoa, c.data_aplicacao,"
+                + "c.dose_aplicada, v.nome_vacina"
+                + "from carterinha as c"
+                + "natural inner join vacina as v"
+                + "inner join pessoa as p on (p.id_pessoa = c.id_profissional) where c.id_usuario = ?";
+        PreparedStatement stmt = null;
+        Vacina vacinaDaCampanha;
+        Profissional prof;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sql);
+            stmt.setLong(1, id_usuario);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                prof = new Profissional(rs.getLong("id_pessoa"), rs.getLong("id_profissional"), rs.getString("nome_profissional"));
+                vacinaDaCampanha = new Vacina(new Date(rs.getString("data_aplicacao")), rs.getInt("dose_aplicada"), rs.getString("nome_vacina"), prof);
+                lista.add(vacinaDaCampanha);
+            }
+        } catch (SQLException ex) {
+            this.conexao.rollback();
+            throw ex;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (conexao != null) {
+                this.conexao.close();
+            }
+        }
+        return lista;
     }
 }

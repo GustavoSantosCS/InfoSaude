@@ -49,7 +49,7 @@ public class ListenerMenuSemUsuario implements Listener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            tela.addPanel(new InternalFrameLogin());
+            tela.addPanel(new InternalFrameLogin(tela));
         }
     }
 

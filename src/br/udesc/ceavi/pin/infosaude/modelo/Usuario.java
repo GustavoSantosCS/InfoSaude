@@ -16,37 +16,29 @@ import java.util.Date;
 public class Usuario extends Pessoa {
 
     private Carterinha carterinha;
+    private Long id_usuario;
 
-    //Construtor
-    public Usuario(Carterinha carterinha) {
-        this.carterinha = carterinha;
-    }
-
-    //Construtor
-    public Usuario(Carterinha carterinha, long id, String nome) {
-        super(id, nome);
-        this.carterinha = carterinha;
+    public Usuario(Long id_pessoa,Long id_usuario, String cpf, Date dataNascimento, 
+            String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo) {
+        super(id_pessoa, cpf, dataNascimento, login, nome, numeroSUS, registroGeral, senha, sexo);
+        this.id_usuario = id_usuario;
     }
 
-    //Construtor
-    public Usuario(Carterinha carterinha, String cpf, Date dataNascimento, String login, String nome, String numeroSUS, String registroGeral, String senha, Sexo sexo, Endereco endereco) {
-        super(cpf, dataNascimento, login, nome, numeroSUS, registroGeral, senha, sexo, endereco);
-        this.carterinha = carterinha;
+    public Usuario(Pessoa pessoa) {
+        super(pessoa.getId(),pessoa.getCpf(), pessoa.getDataNascimento(), pessoa.getLogin(), pessoa.getNome(), pessoa.getNumeroSUS(), pessoa.getRegistroGeral(), pessoa.getSenha(), pessoa.getSexo(), pessoa.getEndereco());
     }
-    
-    //Construtor
-    public Usuario(Pessoa pessoa){
-        super(pessoa.getId(),pessoa.getCpf(), pessoa.getDataNascimento(), pessoa.getLogin(),pessoa.getNome(), pessoa.getNumeroSUS(),
-                pessoa.getRegistroGeral(), pessoa.getSenha(), pessoa.getSexo(), pessoa.getEndereco());
-        this.carterinha = new Carterinha(pessoa);
-    }
-    //Construtor
-    public Usuario() {
-        super();
-    }
+
 
     public Carterinha getCarterinha() {
         return carterinha;
+    }
+
+    public void setCarterinha(Carterinha carterinha) {
+        this.carterinha = carterinha;
+    }
+
+    public Long getId_usuario() {
+        return id_usuario;
     }
 
 }

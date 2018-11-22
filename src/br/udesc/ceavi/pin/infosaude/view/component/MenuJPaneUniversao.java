@@ -161,7 +161,7 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         this.removeAll();
         this.repaint();
         this.revalidate();
-        Usuario_Logado verifica = Main.privilegio;
+        Usuario_Logado verifica = Main.usuario;
         if (verifica instanceof Usuario) {
             menuUsuarioComum();
         }

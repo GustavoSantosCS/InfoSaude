@@ -48,7 +48,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(lbBusca, new Dimension(26, 26));
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width, this);
         jpMenu.add(menu);
-        addPanel(new InternalFrameLancamentoDeVacina());
+        addPanel(new InternalFrameLogin(this));
     }
 
     public boolean addPanel(JInternalFrame frame) {
@@ -331,12 +331,12 @@ public class FramePrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_tfBuscaFocusLost
 
     private void btnSignOffLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignOffLoginActionPerformed
-        if (Main.privilegio == null) {
-            if (this.addPanel(new InternalFrameLogin())) {
+        if (Main.usuario == null) {
+            if (this.addPanel(new InternalFrameLogin(this))) {
                 gerenciarUsuarioLogado();
             }
         } else {
-            Main.privilegio = null;
+            Main.usuario = null;
             if (this.addPanel(new InternalFrameTelaInicial()));
             gerenciarUsuarioLogado();
         }
@@ -361,12 +361,12 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void gerenciarUsuarioLogado() {
         menu.initMenu();
-        if (Main.privilegio == null) {
+        if (Main.usuario == null) {
             btnSignOffLogin.setText("Login");
             this.lbUsuario.setText("Realize Login");
         } else {
             btnSignOffLogin.setText("Sing off");
-            this.lbUsuario.setText(Main.privilegio.getUsuario());
+            this.lbUsuario.setText(Main.usuario.getUsuario());
         }
     }
 
