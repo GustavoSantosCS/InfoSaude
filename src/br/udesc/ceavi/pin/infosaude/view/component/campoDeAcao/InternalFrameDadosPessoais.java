@@ -1,14 +1,36 @@
 package br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao;
 
+import br.udesc.ceavi.pin.infosaude.control.EnderecoControl;
+import br.udesc.ceavi.pin.infosaude.control.PessoaControl;
+import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
 import br.udesc.ceavi.pin.infosaude.modelo.Estado;
 import br.udesc.ceavi.pin.infosaude.modelo.Pessoa;
 import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
+import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
 import java.awt.Dimension;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
 
-    public InternalFrameDadosPessoais(Pessoa pessoa) {
+    private FramePrincipal tela;
+    private Pessoa pessoa;
+    boolean modificarPessoa = false;
+    private Endereco endereco;
+    boolean modificarEndereco = false;
+    String data;
+
+    public InternalFrameDadosPessoais(Pessoa pessoa, FramePrincipal tela) {
         initComponents();
+        this.pessoa = pessoa;
+        this.endereco = pessoa.getEndereco();
         jScrollPane1.setMinimumSize(new Dimension(511, 467));
         jPanel1.setPreferredSize(new Dimension(jScrollPane1.getSize().width, 650));
 
@@ -18,7 +40,26 @@ public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
         tfNumeroSUS.setText(pessoa.getNumeroSUS());
         tfRG.setText(pessoa.getRegistroGeral());
         tfTelefone.setText(pessoa.getEndereco().getTelefone());
-        tfDataNascimento.setText(pessoa.getDataNascimento().getDate() + "/" + (pessoa.getDataNascimento().getMonth() + 1) + "/" + pessoa.getDataNascimento().getYear());
+        data = "" + pessoa.getDataNascimento().getDate() + (pessoa.getDataNascimento().getMonth()) + pessoa.getDataNascimento().getYear();
+        if (data.length() != 10) {
+            if (("" + pessoa.getDataNascimento().getDate()).length() != 2) {
+                data = "0" + pessoa.getDataNascimento().getDate();
+            } else {
+                data = "" + pessoa.getDataNascimento().getDate();
+            }
+            if (("" + pessoa.getDataNascimento().getMonth()).length() != 2) {
+                data += "0" + (pessoa.getDataNascimento().getMonth());
+            } else {
+                data += (pessoa.getDataNascimento().getMonth());
+            }
+            if (("" + pessoa.getDataNascimento().getYear()).length() != 4) {
+                System.out.println("ano");
+                data += "0" + pessoa.getDataNascimento().getYear();;
+            } else {
+                data += pessoa.getDataNascimento().getYear();;
+            }
+        }
+        tfDataNascimento.setText(data);
         tfBairro.setText(pessoa.getEndereco().getBairro());
         tfCEP.setText(pessoa.getEndereco().getCep());
         tfCidade.setText(pessoa.getEndereco().getCidade());
@@ -37,7 +78,7 @@ public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
                 break;
             }
         }
-
+        this.tela = tela;
     }
 
     @SuppressWarnings("unchecked")
@@ -115,7 +156,11 @@ public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
 
-        tfDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        try {
+            tfDataNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##-##-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
         tfDataNascimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfDataNascimentoActionPerformed(evt);
@@ -249,11 +294,6 @@ public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
         for(int i = 0; i< Estado.values().length; i++){
             cbEstado.addItem(Estado.values()[i].toString());
         }
-        cbEstado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbEstadoActionPerformed(evt);
-            }
-        });
 
         try {
             tfCEP.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#####-###")));
@@ -376,10 +416,20 @@ public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
 
         btAlterar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btAlterar.setText("Salvar Alterações");
+        btAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAlterarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btAlterar);
 
         btCancelar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btCancelar.setText("Cancelar");
+        btCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btCancelar);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -404,9 +454,215 @@ public class InternalFrameDadosPessoais extends javax.swing.JInternalFrame {
     private void tfDataNascimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDataNascimentoActionPerformed
     }//GEN-LAST:event_tfDataNascimentoActionPerformed
 
-    private void cbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEstadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbEstadoActionPerformed
+    private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
+        tela.addPanel(new InternalFrameTelaInicial());
+    }//GEN-LAST:event_btCancelarActionPerformed
+
+    private void btAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAlterarActionPerformed
+        //Campos Vaziu
+        if (tfNome.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Nome Vaziu");
+            return;
+        }
+        if (tfCPF.getText().replaceAll(" ", "").length() != 14) {
+            JOptionPane.showMessageDialog(this, "Campo de CPF Informado De Forma Errada");
+            return;
+        }
+        if (tfRG.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de RG Vaziu");
+            return;
+        }
+        if (tfDataNascimento.getText().equals("  -  -    ")) {
+            JOptionPane.showMessageDialog(this, "Campo de DataNascimento Vaziu");
+            return;
+        }
+        if (tfTelefone.getText().replaceAll(" ", "").length() != 14) {
+            JOptionPane.showMessageDialog(this, "Campo de Telefone Informado De Forma Errada");
+            return;
+        }
+        if (tfEmail.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Email Vaziu");
+            return;
+        }
+        if (tfCEP.getText().replaceAll(" ", "").length() != 9) {
+            JOptionPane.showMessageDialog(this, "Campo de Cep Informado De Forma Errada");
+            return;
+        }
+        if (tfCidade.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Cidade Vaziu");
+            return;
+        }
+        if (tfBairro.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Bairro Vaziu");
+            return;
+        }
+        if (tfRua.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Rua Vaziu");
+            return;
+        }
+        if (tfNumero.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Numero Vaziu");
+            return;
+        }
+        if (tfNumeroSUS.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Campo de Numero Do SUS Vaziu");
+            return;
+        }
+        List<Integer> atualizar = new ArrayList<>();
+        //Comparar Com o Objeto
+        StringBuilder sb = new StringBuilder("{");
+        if (!tfNome.getText().equals(pessoa.getNome())) {
+            sb.append("Nome, ");
+            atualizar.add(1);
+        }
+        if (!tfCPF.getText().equals(pessoa.getCpf())) {
+            sb.append("CPF, ");
+            atualizar.add(2);
+        }
+        if (!tfRG.getText().equals(pessoa.getRegistroGeral())) {
+            sb.append("RG, ");
+            atualizar.add(3);
+        }
+        if (!data.equals(tfDataNascimento.getText().replaceAll("-", ""))) {
+            sb.append("Data de Nascimento, ");
+            atualizar.add(4);
+        }
+        if (!tfTelefone.getText().equals(pessoa.getEndereco().getTelefone())) {
+            sb.append("Telefone, ");
+            atualizar.add(5);
+        }
+        if (!tfEmail.getText().equals(pessoa.getEndereco().getEmail())) {
+            sb.append("Email, ");
+            atualizar.add(6);
+        }
+        if (!tfCEP.getText().equals(pessoa.getEndereco().getCep())) {
+            sb.append("Cep, ");
+            atualizar.add(7);
+        }
+        if (!tfCidade.getText().equals(pessoa.getEndereco().getCidade())) {
+            sb.append("Cidade, ");
+            atualizar.add(8);
+        }
+        if (!tfBairro.getText().equals(pessoa.getEndereco().getBairro())) {
+            sb.append("Bairro, ");
+            atualizar.add(9);
+        }
+        if (!tfRua.getText().equals(pessoa.getEndereco().getRua())) {
+            sb.append("Rua, ");
+            atualizar.add(10);
+        }
+
+        if (!tfNumero.getText().equals("" + pessoa.getEndereco().getNumero())) {
+            sb.append("Numero, ");
+            atualizar.add(11);
+        }
+        if (!tfComplemento.getText().equals(endereco.getComplemento())) {
+            sb.append("Complemento, ");
+            atualizar.add(13);
+        }
+        if (!tfNumeroSUS.getText().equals(pessoa.getNumeroSUS())) {
+            sb.append("Numero Do SUS");
+            atualizar.add(12);
+        }
+        sb.append("}");
+        if (sb.toString().length() != 2) {
+            if (sb.charAt(sb.length() - 2) == ',') {
+                sb.deleteCharAt(sb.length() - 2);
+            }
+            int confirmacao = JOptionPane.showConfirmDialog(this, "Deseja Modificar Tais Dados\n" + sb.toString());
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                for (int i = 0; i < atualizar.size(); i++) {
+                    switch (atualizar.get(i)) {
+                        case 1:
+                            pessoa.setNome(tfNome.getText());
+                            modificarPessoa = true;
+                            break;
+                        case 2:
+                            pessoa.setCpf(tfCPF.getText());
+                            modificarPessoa = true;
+                            break;
+                        case 3:
+                            pessoa.setRegistroGeral(tfRG.getText());
+                            modificarPessoa = true;
+                            break;
+                        case 4:
+                            String[] da = tfDataNascimento.getText().split("-");
+                            String lastCrawlDate = da[2] + "-" + da[1] + "-" + da[0];
+                            Date dataNascimento = null;
+                            try {
+                                dataNascimento = new SimpleDateFormat("yyyy-MM-dd").parse(lastCrawlDate);
+                            } catch (ParseException ex) {
+                                JOptionPane.showMessageDialog(this, "Erro");
+                            }
+                            pessoa.setDataNascimento(dataNascimento);
+                            modificarPessoa = true;
+                            break;
+                        case 5:
+                            endereco.setTelefone(tfTelefone.getText());
+                            modificarEndereco = true;
+                            break;
+                        case 6:
+                            endereco.setEmail(tfEmail.getText());
+                            modificarEndereco = true;
+                            break;
+                        case 7:
+                            endereco.setCep(tfCEP.getText());
+                            modificarEndereco = true;
+                            break;
+                        case 8:
+                            endereco.setCidade(tfCidade.getText());
+                            modificarEndereco = true;
+                            break;
+                        case 9:
+                            endereco.setBairro(tfBairro.getText());
+                            modificarEndereco = true;
+                            break;
+                        case 10:
+                            endereco.setRua(tfRua.getText());
+                            modificarEndereco = true;
+                            break;
+                        case 11:
+                            endereco.setNumero(Integer.parseInt(tfNumero.getText()));
+                            modificarEndereco = true;
+                            break;
+                        case 12:
+                            pessoa.setNumeroSUS(tfNumeroSUS.getText());
+                            modificarPessoa = true;
+                            break;
+                        case 13:
+                            endereco.setComplemento(tfComplemento.getText());
+                            modificarEndereco = true;
+                            break;
+                    }
+                }
+                boolean atulizadoEndereco = false;
+                boolean atulizadoPessoa = false;
+                if (modificarEndereco) {
+                    try {
+                        EnderecoControl controladorEndereco = new EnderecoControl();
+                        atulizadoEndereco = controladorEndereco.update(endereco);
+                            JOptionPane.showMessageDialog(this, "Dados Endereco Atualizado Com Sucesso");
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Erro ao Estabelecer um Conexão Com o Banco de Dados");
+                    }
+                }
+                if (modificarPessoa) {
+                    PessoaControl controladorPessoa;
+                    try {
+                        controladorPessoa = new PessoaControl();
+                       atulizadoPessoa = controladorPessoa.update(pessoa);
+                        if (atulizadoPessoa) {
+                            JOptionPane.showMessageDialog(this, "Dados Pessoais Atualizado Com Sucesso");
+                        }
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Erro ao Estabelecer um Conexão Com o Banco de Dados");
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Nada Alterar");
+        }
+    }//GEN-LAST:event_btAlterarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

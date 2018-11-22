@@ -40,11 +40,11 @@ public class ListenerMenuUsuarioComum implements Listener {
         listaDeButao.get(5).addActionListener(new btn4AcitionListener());
     }
 
-    private  class btnAcitionListener implements ActionListener {
+    private class btnAcitionListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            tela.addPanel(new InternalFrameDadosPessoais((Usuario)Main.usuario));
+            tela.addPanel(new InternalFrameDadosPessoais((Usuario) Main.usuario, tela));
         }
     }
 

@@ -16,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -137,38 +139,6 @@ public class PessoaControl {
         return id;
     }
 
-    public int Alterar(Pessoa pessoa) throws SQLException {
-        int linhasAlteradas = 0;
-        String sql = "update pessoa set nome = ?, login = ?, senha = ?, cpf = ?, rg = ?, numero_sus = ?, data_nascimento = ?, sexo = ?";
-
-        PreparedStatement stmt = null;
-        try {
-            stmt = this.conexao.getConnection().prepareStatement(sql);
-
-            stmt.setString(1, pessoa.getNome());
-            stmt.setString(2, pessoa.getLogin());
-            stmt.setString(3, pessoa.getSenha());
-            stmt.setString(3, pessoa.getCpf());
-            stmt.setString(4, pessoa.getRegistroGeral());
-            stmt.setString(5, pessoa.getNumeroSUS());
-            java.sql.Date dataN = new java.sql.Date(pessoa.getDataNascimento().getTime());
-            stmt.setDate(8, dataN);
-            stmt.setString(9, pessoa.getSexo().toString());
-            linhasAlteradas = stmt.executeUpdate();
-            this.conexao.commit();
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException ex) {
-                }
-            }
-            if (this.conexao != null) {
-                this.conexao.close();
-            }
-        }
-        return linhasAlteradas;
-    }
 
     public boolean login(String login, String senha) throws SQLException {
         String sqlUsuario = "select * from pessoa as p natural inner join usario where p.login = ? and p.senha = ?";
@@ -254,5 +224,40 @@ public class PessoaControl {
         }
 
         return true;
+    }
+
+    public boolean update(Pessoa pessoa) throws SQLException {
+        boolean atualizado = false;
+        String sql = "update pessoa set nome = ?, login = ?, senha = ?, cpf = ?, rg = ?, numero_sus = ?, data_nascimento = ?, sexo = ? where pessoa.id_pessoa = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sql);
+            stmt.setString(1, pessoa.getNome());
+            stmt.setString(2, pessoa.getLogin());
+            stmt.setString(3, pessoa.getSenha());
+            stmt.setString(3, pessoa.getCpf());
+            stmt.setString(4, pessoa.getRegistroGeral());
+            stmt.setString(5, pessoa.getNumeroSUS());
+            java.sql.Date dataN = new java.sql.Date(pessoa.getDataNascimento().getTime());
+            stmt.setDate(6, dataN);
+            stmt.setString(7, pessoa.getSexo().toString());
+            stmt.setLong(8, pessoa.getId());
+            atualizado = (stmt.executeUpdate() == 1);
+            this.conexao.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw ex;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
+        }
+        return atualizado;
     }
 }

@@ -54,10 +54,10 @@ public class FramePrincipal extends javax.swing.JFrame {
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width, this);
         jpMenu.add(menu);
         addPanel(new InternalFrameDadosPessoais(new Pessoa("038.752.762-13",
-                new Date(1996, 8, 16), "GustavoSantos", "Gustavo de Carvalho Santos", 
+                new Date(1996, 8, 6), "GustavoSantos", "Gustavo de Carvalho Santos", 
                 "505050", "123456789", "Amanda", Sexo.F,
                 new Endereco("Centro", "44444-555", "Ibirama", "Apartamento 105", "gustavosantosixi@gmail.com",
-                        70, "Vitor Meireles", "(47) 91518293", Estado.SANTA_CATARINA))));
+                        70, "Vitor Meireles", "(47) 99151-8293", Estado.SANTA_CATARINA)),this));
     }
 
     public boolean addPanel(JInternalFrame frame) {
@@ -66,7 +66,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                 return false;
             }
         }
-
         jDesktopPane1.removeAll();
         frame.setMinimumSize(this.jDesktopPane1.getSize());
         ((BasicInternalFrameUI) frame.getUI()).setNorthPane(null); //retirar o painel superior

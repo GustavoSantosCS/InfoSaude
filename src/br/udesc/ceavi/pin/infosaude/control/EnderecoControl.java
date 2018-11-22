@@ -127,4 +127,40 @@ public class EnderecoControl {
         }
         return endereco;
     }
+
+    public boolean update(Endereco endereco) throws SQLException {
+        boolean atualizado = false;
+        String sqlQuery = "UPDATE endereco SET bairro=?, cep=?, cidade=?, complemento=?, numero=?, rua=?, estado=?, email=?, telefone=? WHERE endereco.id_endereco = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = this.conexao.getConnection().prepareStatement(sqlQuery);
+            stmt.setString(1, endereco.getBairro());
+            stmt.setString(2, endereco.getCep());
+            stmt.setString(3, endereco.getCidade());
+            stmt.setString(4, endereco.getComplemento());
+            stmt.setInt(5, endereco.getNumero());
+            stmt.setString(6, endereco.getRua());
+            String e = endereco.getEstado().toString();
+            e = e.replaceAll(" ", "_");
+            stmt.setString(7, e.toUpperCase());
+            stmt.setString(8, endereco.getEmail());
+            stmt.setString(9, endereco.getTelefone());
+            stmt.setLong(10, endereco.getId());
+            atualizado = stmt.executeUpdate() == 1;
+        } catch (SQLException error) {
+            this.conexao.rollback();
+            throw error;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                }
+            }
+            if (this.conexao != null) {
+                this.conexao.close();
+            }
+        }
+        return atualizado;
+    }
 }
