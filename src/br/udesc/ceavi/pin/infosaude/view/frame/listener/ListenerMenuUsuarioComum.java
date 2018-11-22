@@ -1,6 +1,9 @@
 package br.udesc.ceavi.pin.infosaude.view.frame.listener;
 
+import br.udesc.ceavi.pin.infosaude.modelo.Usuario;
+import br.udesc.ceavi.pin.infosaude.principal.Main;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameCampanha;
+import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameDadosPessoais;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameTelaInicial;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.InternalFrameVacina;
 import br.udesc.ceavi.pin.infosaude.view.frame.FramePrincipal;
@@ -30,10 +33,19 @@ public class ListenerMenuUsuarioComum implements Listener {
     @Override
     public void addActions() {
         listaDeButao.get(0).addActionListener(new btn0AcitionListener());
-        listaDeButao.get(1).addActionListener(new btn1AcitionListener());
-        listaDeButao.get(2).addActionListener(new btn2AcitionListener());
-        listaDeButao.get(3).addActionListener(new btn3AcitionListener());
-        listaDeButao.get(4).addActionListener(new btn4AcitionListener());
+        listaDeButao.get(1).addActionListener(new btnAcitionListener());
+        listaDeButao.get(2).addActionListener(new btn1AcitionListener());
+        listaDeButao.get(3).addActionListener(new btn2AcitionListener());
+        listaDeButao.get(4).addActionListener(new btn3AcitionListener());
+        listaDeButao.get(5).addActionListener(new btn4AcitionListener());
+    }
+
+    private  class btnAcitionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tela.addPanel(new InternalFrameDadosPessoais((Usuario)Main.usuario));
+        }
     }
 
     private class btn0AcitionListener implements ActionListener {

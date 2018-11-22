@@ -63,6 +63,7 @@ public class MenuJPaneUniversao extends javax.swing.JPanel {
         removerMenu();
         List<JButton> lista = new ArrayList<>();
         lista.add(new JButton("Home"));
+        lista.add(new JButton("Conta"));
         lista.add(new JButton("Consultar Vacinas"));
         lista.add(new JButton("Consultar Campanhas"));
         lista.add(new JButton("Dados Pessoais"));

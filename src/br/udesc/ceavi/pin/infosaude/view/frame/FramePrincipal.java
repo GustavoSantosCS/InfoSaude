@@ -1,6 +1,10 @@
 package br.udesc.ceavi.pin.infosaude.view.frame;
 
 import br.udesc.ceavi.pin.infosaude.control.dao.ConexaoPostgresJDBC;
+import br.udesc.ceavi.pin.infosaude.modelo.Endereco;
+import br.udesc.ceavi.pin.infosaude.modelo.Estado;
+import br.udesc.ceavi.pin.infosaude.modelo.Pessoa;
+import br.udesc.ceavi.pin.infosaude.modelo.Sexo;
 import br.udesc.ceavi.pin.infosaude.principal.Main;
 import br.udesc.ceavi.pin.infosaude.view.component.MenuJPaneUniversao;
 import br.udesc.ceavi.pin.infosaude.view.component.campoDeAcao.*;
@@ -10,6 +14,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -48,7 +53,11 @@ public class FramePrincipal extends javax.swing.JFrame {
         setSize(lbBusca, new Dimension(26, 26));
         menu = new MenuJPaneUniversao(this.jpColuna.getSize().width, this);
         jpMenu.add(menu);
-        addPanel(new InternalFrameLogin(this));
+        addPanel(new InternalFrameDadosPessoais(new Pessoa("038.752.762-13",
+                new Date(1996, 8, 16), "GustavoSantos", "Gustavo de Carvalho Santos", 
+                "505050", "123456789", "Amanda", Sexo.F,
+                new Endereco("Centro", "44444-555", "Ibirama", "Apartamento 105", "gustavosantosixi@gmail.com",
+                        70, "Vitor Meireles", "(47) 91518293", Estado.SANTA_CATARINA))));
     }
 
     public boolean addPanel(JInternalFrame frame) {
